@@ -53,20 +53,21 @@ cx + dy = f
 2
 
 4 0.5
+
+https://python.su/forum/topic/33279/
 """
 
-# from math import isclose
+import random
+from math import isclose
 
 
 def slau(a, b, c, d, e, f):
     det = a * d - b * c
 
     if det != 0:
-        x0 = d * e - b * f
-        y0 = -c * e + a * f
-        x0 /= det
-        y0 /= det
-        return [2, x0, y0]
+        delta_x = d * e - b * f
+        delta_y = -c * e + a * f
+        return [2, delta_x / det, delta_y / det]
     elif b != 0 and d != 0:
         k = a / b
         if e / b == f / d:  # if isclose(e / b, f / d):
@@ -106,15 +107,53 @@ def slau(a, b, c, d, e, f):
                 return [3, e / a]
 
 
-l = []
+def solution(a, b, c, d, e, f):
+    delta = a * d - b * c
+    delta_x = e * d - b * f
+    delta_y = a * f - c * e
+    if delta == 0:
+        if a == b == c == d == e == f == 0:
+            return [5]
+        elif a == b == 0 and e != 0:
+            return [0]
+        elif c == d == 0 and f != 0:
+            return [0]
+        elif delta_x == 0:
+            if a == c == 0:
+                return 4, f / d if b == 0 else e / b
+            elif b == d == 0:
+                return (3, f / c if a == 0 else e / a) if delta_y == 0 else [0]
+            else:
+                return (1, -a / b, e / b) if d == 0 else (1, -c / d, f / d)
+        else:
+            return [0]
+    else:
+        return 2, delta_x / delta, delta_y / delta
 
-for i in range(6):
-    l.append(float(input()))
 
+for i in range(10):
+    l = [float(random.randint(-100, 100)) for _ in range(6)]
+
+    res1, res2 = slau(*l), solution(*l)
+
+    print(l, res1)
+
+    if len(res1) != len(res2):
+        print(l, "не равна длина")
+
+    eq = [isclose(res1[i], res2[i]) for i in range(len(res1))]
+
+    # print(eq)
+
+    if not all(eq):
+        print(res1, res2)
+
+
+# l = [float(input()) for _ in range(6)]
 
 # print(*slau(*l))
 
-a, b, c, d, e, f = l
+# a, b, c, d, e, f = l
 # l2 = c, d, a, b, f, e
 # l3 = b, a, d, c, e, f
 # l4 = d, c, b, a, f, e
@@ -130,7 +169,7 @@ a, b, c, d, e, f = l
 # print(s)
 
 # try:
-print(*slau(*l))
+# print(*slau(*l))
 # except TypeError: # ZeroDivisionError
 # print(0)
 
