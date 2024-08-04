@@ -38,4 +38,117 @@ P1 или N1, вместо соответствующего числа напе�
 -1 -1
 """
 
-K1, M, K2, P2, N2 = map(int, input().split())
+
+def linear(a, b):
+    """
+    b = a * X + Y
+
+    return X, Y
+    """
+    if a == 0:
+        return "MANY SOLUTIONS", b
+    else:
+        X, Y = b // a, b % a
+        return X, Y
+
+
+def NOD(m, n):
+    while m != n:
+        if m > n:
+            m = m - n
+        else:
+            n = n - m
+    return n
+
+
+def Diophantine(a, b, c):
+    """
+    c = a * X + b * Y
+
+    return X, Y
+
+    X, Y - Natural or 0
+    a, b, c > 0
+
+    >>> Diophantine(2, 3, 6)
+    {(0, 2), (3, 0)}
+    >>> Diophantine(2, 5, 1)
+    set()
+    """
+    if c % NOD(a, b) != 0:
+        return "NO SOLUTION"
+
+    if a == 0:  # c = b * Y
+        return "MANY SOLUTIONS", c // b
+    elif b == 0:  # c = a * X
+        return c // a, "MANY SOLUTIONS"
+    else:
+        answers = set()
+        for x in range(0, int(c // a) + 1):
+            y = (c - a * x) / b
+            if y >= 0 and int(y) == y:
+                answers.add((x, int(y)))
+
+        return answers
+
+
+def fun(K1, M, K2, P2, N2):
+    """
+    >>> fun(89, 20, 41, 1, 11)
+    (2, 3)
+    >>> fun(11, 1, 1, 1, 1)
+    (0, 1)
+    >>> fun(3, 2, 2, 2, 1)
+    (-1, -1)
+
+    K1 - квартира, для которой надо узнать подъезд P1 и этаж N1
+    M - количество этажей
+    K2 - квартира
+    P2 - подъезд
+    N2 - этаж
+
+    X - количество квартир на каждой лестничной площадке
+    Y - номер квартиры на этаже
+    K = ((P - 1) * M + (N - 1)) * X + Y = (P - 1) * M * X + (N - 1) * X + Y
+    """
+
+    if N2 > M:
+        return -1, -1
+
+    X, Y = linear((P2 - 1) * M + (N2 - 1), K2)
+
+    if X == "MANY SOLUTIONS":
+        if M == 1:
+            return 0, 1
+        else:
+            return 0, 0
+
+    if X == 0 or Y == 0:
+        return -1, -1
+
+    answers = Diophantine(M * X, X, K1 - Y)
+
+    if answers == "NO SOLUTION":
+        return -1, -1
+
+    for i in answers.copy():
+        P1, N1 = i
+        P1, N1 = P1 + 1, N1 + 1
+        if N1 > M:
+            answers.remove(i)
+
+    if len(answers) == 1:
+        P1, N1 = answers.pop()
+        return P1 + 1, N1 + 1
+    else:
+        return -1, -1
+
+
+# K1, M, K2, P2, N2 = map(int, input().split())
+# print(*fun(K1, M, K2, P2, N2))
+# print(*fun2(K1, M, K2, P2, N2))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
