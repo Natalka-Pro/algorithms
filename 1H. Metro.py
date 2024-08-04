@@ -52,3 +52,11 @@
 3. Стоя на платформе 5, 6 или 7 минут, Таня могла насчитать 3 поезда на первом пути
 и 2 на втором.
 """
+
+# A, B, C, D, E = [int(input()) for _ in range(5)]
+# print(fun(A, B, C, D, E))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

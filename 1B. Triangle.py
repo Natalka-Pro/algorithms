@@ -37,14 +37,27 @@ YES
 YES
 """
 
-l = []
 
-for i in range(3):
-    l.append(int(input()))
+def fun(*l):
+    """
+    >>> fun(3, 4, 5)
+    'YES'
+    >>> fun(3, 5, 4)
+    'YES'
+    >>> fun(4, 5, 3)
+    'YES'
+    """
+    for i in range(3):
+        if l[i] >= sum(l[:i]) + sum(l[i + 1 :]):
+            return "NO"
+    else:
+        return "YES"
 
-for i in range(3):
-    if l[i] >= sum(l[:i]) + sum(l[i + 1 :]):
-        print("NO")
-        break
-else:
-    print("YES")
+
+a, b, c = [int(input()) for _ in range(3)]
+print(fun(a, b, c))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

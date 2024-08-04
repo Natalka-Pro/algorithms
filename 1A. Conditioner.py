@@ -51,23 +51,39 @@ freeze
 в комнате не поменяется.
 """
 
-t_room, t_cond = map(int, input().split())
+
+def fun(t_room, t_cond, mode):
+    """
+    >>> fun(10, 20, 'heat')
+    20
+    >>> fun(10, 20, 'freeze')
+    10
+    """
+    match mode:
+        case "freeze":
+            if t_cond >= t_room:
+                return t_room
+            else:
+                return t_cond
+        case "heat":
+            if t_cond <= t_room:
+                return t_room
+            else:
+                return t_cond
+        case "auto":
+            return t_cond
+        case "fan":
+            return t_room
+
+
 # заданной температуре в комнате troom,
 # установленным на кондиционере желаемой температуре tcond
+t_room, t_cond = map(int, input().split())
 mode = input()
 
-match mode:
-    case "freeze":
-        if t_cond >= t_room:
-            print(t_room)
-        else:
-            print(t_cond)
-    case "heat":
-        if t_cond <= t_room:
-            print(t_room)
-        else:
-            print(t_cond)
-    case "auto":
-        print(t_cond)
-    case "fan":
-        print(t_room)
+print(fun(t_room, t_cond, mode))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

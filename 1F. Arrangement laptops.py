@@ -35,14 +35,27 @@
 вывести один из них.
 """
 
+
+def fun(l0, w0, l1, w1):
+    """
+    >>> fun(10, 2, 2, 10)
+    (10, 4)
+    >>> fun(5, 7, 3, 2)
+    (9, 5)
+    """
+    n0, n1 = [l0, w0], [l1, w1]
+    n0, n1 = sorted(n0, reverse=True), sorted(n1, reverse=True)  # descending
+    n0, n1 = sorted([n0, n1], reverse=True)
+
+    s1 = n0[0], n0[1] + n1[1]
+    s2 = n0[0] + n1[1], max(n0[1], n1[0])
+    return min(s1, s2, key=lambda x: x[0] * x[1])
+
+
 l0, w0, l1, w1 = map(int, input().split())
+print(*fun(l0, w0, l1, w1))
 
-n0, n1 = [l0, w0], [l1, w1]
-n0, n1 = sorted(n0)[::-1], sorted(n1)[::-1]
-n0, n1 = sorted([n0, n1])[::-1]
+if __name__ == "__main__":
+    import doctest
 
-# print(n0, n1)
-s1 = n0[0], n0[1] + n1[1]
-s2 = n0[0] + n1[1], max(n0[1], n1[0])
-# print(s1, s2)
-print(*min(s1, s2, key=lambda x: x[0] * x[1]))
+    doctest.testmod()

@@ -59,6 +59,32 @@ YES
 
 
 def standart_num(x):
+    """
+    >>> standart_num('8(495)430-23-97')
+    '84954302397'
+    >>> standart_num('+7-4-9-5-43-023-97')
+    '84954302397'
+    >>> standart_num('4-3-0-2-3-9-7')
+    '84954302397'
+    >>> standart_num('8-495-430')
+    '84958495430'
+    >>> standart_num('86406361642')
+    '86406361642'
+    >>> standart_num('83341994118')
+    '83341994118'
+    >>> standart_num('86406361642')
+    '86406361642'
+    >>> standart_num('83341994118')
+    '83341994118'
+    >>> standart_num('+78047952807')
+    '88047952807'
+    >>> standart_num('+78047952807')
+    '88047952807'
+    >>> standart_num('+76147514928')
+    '86147514928'
+    >>> standart_num('88047952807')
+    '88047952807'
+    """
     symb = ["(", ")", "-"]
     for j in symb:
         x = x.replace(j, "")
@@ -74,12 +100,33 @@ def standart_num(x):
     return code + num
 
 
-new_numb = standart_num(input())
+def fun(*l):
+    """
+    >>> fun('8(495)430-23-97', '+7-4-9-5-43-023-97', '4-3-0-2-3-9-7', '8-495-430')
+    ['YES', 'YES', 'NO']
+    >>> fun('86406361642', '83341994118', '86406361642', '83341994118')
+    ['NO', 'YES', 'NO']
+    >>> fun('+78047952807', '+78047952807', '+76147514928', '88047952807')
+    ['YES', 'NO', 'YES']
+    """
+    new_numb = standart_num(l[0])
+    answers = []
 
-for i in range(3):
-    x = standart_num(input())
+    for i in range(1, len(l)):
+        x = standart_num(l[i])
 
-    if x == new_numb:
-        print("YES")
-    else:
-        print("NO")
+        if x == new_numb:
+            answers.append("YES")
+        else:
+            answers.append("NO")
+
+    return answers
+
+
+l = [input() for _ in range(4)]
+print(*fun(*l), sep="\n")
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

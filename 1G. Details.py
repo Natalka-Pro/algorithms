@@ -37,18 +37,35 @@
 4
 """
 
+
+def fun(N, K, M):
+    """
+    >>> fun(10, 5, 2)
+    4
+    >>> fun(13, 5, 3)
+    3
+    >>> fun(14, 5, 3)
+    4
+    """
+    det = 0
+    ost = N
+    while ost >= K:
+        col_zag, ost1 = ost // K, ost % K
+        if K < M:
+            break
+        col_det, ost2 = K // M, K % M
+        col_det *= col_zag
+        ost2 *= col_zag
+        det += col_det
+        ost = ost1 + ost2
+
+    return det
+
+
 N, K, M = map(int, input().split())
+print(fun(N, K, M))
 
-det = 0
-ost = N
-while ost >= K:
-    col_zag, ost1 = ost // K, ost % K
-    if K < M:
-        break
-    col_det, ost2 = K // M, K % M
-    col_det *= col_zag
-    ost2 *= col_zag
-    det += col_det
-    ost = ost1 + ost2
+if __name__ == "__main__":
+    import doctest
 
-print(det)
+    doctest.testmod()

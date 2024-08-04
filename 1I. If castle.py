@@ -34,20 +34,16 @@ NO
 """
 
 
-def If(A, B, C, D, E):
+def fun(A, B, C, D, E):
     """
-    >>> If(1, 1, 1, 1, 1)
+    >>> fun(1, 1, 1, 1, 1)
     'YES'
-
-    >>> If(2, 2, 2, 1, 1)
+    >>> fun(2, 2, 2, 1, 1)
     'NO'
-
-    >>> If(1, 2, 3, 4, 5)
+    >>> fun(1, 2, 3, 4, 5)
     'YES'
-
-    >>> If(1, 1, 3, 2, 2)
+    >>> fun(1, 1, 3, 2, 2)
     'YES'
-
     """
     A, B, _ = sorted((A, B, C))  # ascending
     D, E = sorted((D, E))
@@ -55,8 +51,8 @@ def If(A, B, C, D, E):
     return "YES" if (A <= D) and (B <= E) else "NO"
 
 
-A, B, C, D, E = [int(input()) for i in range(5)]
-print(If(A, B, C, D, E))
+A, B, C, D, E = [int(input()) for _ in range(5)]
+print(fun(A, B, C, D, E))
 
 if __name__ == "__main__":
     import doctest

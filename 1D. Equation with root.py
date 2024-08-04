@@ -40,33 +40,48 @@ SOLUTIONS.
 NO SOLUTION
 """
 
+
+def fun(a, b, c):
+    """
+    >>> fun(1, 0, 0)
+    0
+    >>> fun(1, 2, 3)
+    7
+    >>> fun(1, 2, -3)
+    'NO SOLUTION'
+    """
+    if c < 0:
+        return "NO SOLUTION"
+    elif c == 0:  # ax + b = 0
+        if a == 0:
+            if b != 0:
+                return "NO SOLUTION"
+            else:
+                return "MANY SOLUTIONS"
+        else:
+            ans = -b / a
+            if int(ans) == ans:
+                return int(ans)
+            else:
+                return "NO SOLUTION"
+    else:  # ax + b = c^2
+        if a == 0:
+            if b != c**2:
+                return "NO SOLUTION"
+            else:
+                return "MANY SOLUTIONS"
+        else:
+            ans = (c**2 - b) / a
+            if int(ans) == ans:
+                return int(ans)
+            else:
+                return "NO SOLUTION"
+
+
 a, b, c = int(input()), int(input()), int(input())
-ans = None
+print(fun(a, b, c))
 
-if c < 0:
-    ans = "NO SOLUTION"
-elif c == 0:
-    if a == 0:
-        if b != 0:
-            ans = "NO SOLUTION"
-        else:
-            ans = "MANY SOLUTIONS"
-    else:
-        ans = -b / a
-else:  # ax + b = c^2
-    if a == 0:
-        if b != c**2:
-            ans = "NO SOLUTION"
-        else:
-            ans = "MANY SOLUTIONS"
-    else:
-        ans = (c**2 - b) / a
+if __name__ == "__main__":
+    import doctest
 
-
-if type(ans) is float:
-    if int(ans) == ans:
-        print(int(ans))
-    else:
-        print("NO SOLUTION")
-else:
-    print(ans)
+    doctest.testmod()
