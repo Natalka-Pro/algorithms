@@ -53,8 +53,34 @@
 и 2 на втором.
 """
 
-# A, B, C, D, E = [int(input()) for _ in range(5)]
-# print(fun(A, B, C, D, E))
+
+def interval(A, N):
+    max_time = N + (N + 1) * A
+    min_time = N + (N - 1) * A
+    return min_time, max_time
+
+
+def fun(A, B, N, M):
+    """
+    >>> fun(1, 3, 3, 2)
+    (5, 7)
+    >>> fun(1, 5, 1, 2)
+    (-1,)
+    """
+    int1 = interval(A, N)
+    int2 = interval(B, M)
+
+    left = max(int1[0], int2[0])
+    right = min(int1[1], int2[1])
+
+    if right < left:
+        return (-1,)
+    else:
+        return left, right
+
+
+A, B, N, M = [int(input()) for _ in range(4)]
+print(*fun(A, B, N, M))
 
 if __name__ == "__main__":
     import doctest
