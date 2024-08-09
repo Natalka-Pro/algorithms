@@ -57,12 +57,29 @@ cx + dy = f
 https://python.su/forum/topic/33279/
 """
 
-# import random
-# from math import isclose
+
+def linear(a, b, c):
+    """ax + by = c"""
+
+    if b != 0:  # y = c/b - a/b * x
+        if a != 0:
+            return 1, -a / b, c / b
+        else:
+            return 4, c / b
+    else:  # ax = c
+        if a != 0:
+            return 3, c / a
+        else:  # 0 = c
+            if c == 0:
+                return (5,)
+            else:
+                return (0,)
 
 
 def fun(a, b, c, d, e, f):
     """
+    New solution
+
     >>> fun(1, 0, 0, 1, 3, 3)
     (2, 3.0, 3.0)
     >>> fun(1, 1, 2, 2, 1, 2)
@@ -77,7 +94,42 @@ def fun(a, b, c, d, e, f):
 
     if det != 0:
         return 2, delta_x / det, delta_y / det
-    elif b != 0 and d != 0:
+    elif a != 0:
+        if delta_y == 0:
+            return linear(a, b, e)
+        else:
+            return (0,)
+    elif b != 0:
+        if delta_x == 0:
+            return linear(a, b, e)
+        else:
+            return (0,)
+    else:  # a == b == 0
+        if e == 0:
+            return linear(c, d, f)
+        else:
+            return (0,)
+
+
+def fun1(a, b, c, d, e, f):
+    """
+    Old solution :P
+
+    >>> fun1(1, 0, 0, 1, 3, 3)
+    (2, 3.0, 3.0)
+    >>> fun1(1, 1, 2, 2, 1, 2)
+    (1, -1.0, 1.0)
+    >>> fun1(0, 2, 0, 4, 1, 2)
+    (4, 0.5)
+    """
+
+    det = a * d - b * c
+    delta_x = d * e - b * f
+    delta_y = -c * e + a * f
+
+    if det != 0:
+        return 2, delta_x / det, delta_y / det
+    elif b != 0:  # elif b != 0 and d != 0: ???????
         k = a / b
         if delta_x == 0:  # e / b == f / d:
             if k != 0:
@@ -86,7 +138,7 @@ def fun(a, b, c, d, e, f):
                 return 4, e / b
         else:
             return (0,)
-    elif b == 0:
+    else:  # b == 0
         if a == 0:
             if e != 0:
                 return (0,)
@@ -117,6 +169,16 @@ def fun(a, b, c, d, e, f):
 
 
 def fun2(a, b, c, d, e, f):
+    """
+    Not my solution
+
+    >>> fun2(1, 0, 0, 1, 3, 3)
+    (2, 3.0, 3.0)
+    >>> fun2(1, 1, 2, 2, 1, 2)
+    (1, -1.0, 1.0)
+    >>> fun2(0, 2, 0, 4, 1, 2)
+    (4, 0.5)
+    """
     delta = a * d - b * c
     delta_x = e * d - b * f
     delta_y = a * f - c * e
@@ -141,25 +203,8 @@ def fun2(a, b, c, d, e, f):
 
 
 l = [float(input()) for _ in range(6)]
-print(*fun(*l))
-
-
-# for i in range(10):
-#     l = [float(random.randint(-100, 100)) for _ in range(6)]
-
-#     res1, res2 = fun(*l), fun2(*l)
-
-#     print(l, res1)
-
-#     if len(res1) != len(res2):
-#         print(l, "не равна длина")
-
-#     eq = [isclose(res1[i], res2[i]) for i in range(len(res1))]
-
-#     # print(eq)
-
-#     if not all(eq):
-#         print(res1, res2)
+# l = [-3, -6, 0, 0, 6, -2]
+print(*fun1(*l))
 
 
 # a, b, c, d, e, f = l
@@ -191,3 +236,25 @@ if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+
+    # import numpy as np
+    # from math import isclose
+
+    # for i in range(1000):
+    #     R = 10
+
+    #     l = list(np.random.randint(-R, R+1, 6))
+    #     res1, res2 = fun1(*l), fun2(*l)
+
+    #     try:
+    #         if len(res1) != len(res2):
+    #             print(l, res1, res2, "не равна длина")
+    #             break
+    #     except:
+    #         print(l, res1, res2)
+    #         break
+
+    #     eq = [isclose(res1[i], res2[i]) for i in range(len(res1))]
+    #     if not all(eq):
+    #         print(l, "не равен ответ")
+    #         break
