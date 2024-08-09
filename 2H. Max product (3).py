@@ -49,27 +49,17 @@ def fun(s):
     >>> fun([1, 2, 3, 4, 5, -5, -2, -3])
     (5, -3, -5)
     >>> fun([-1, -2, -3, -4])
-    (-2, -3, -4)
+    (-1, -2, -3)
     """
-    pos = []
-    neg = []
+    maxs_3 = []
+    mins_2 = []
 
     for i in s:
-        if i > 0:
-            pos = update(pos, i, max_len=3, reverse=True)
-        else:
-            neg = update(neg, i, max_len=3)
+        maxs_3 = update(maxs_3, i, max_len=3, reverse=True)
+        mins_2 = update(mins_2, i, max_len=2)
 
-    # print(pos, neg)
-    if len(pos) + len(neg) == 3:
-        ans = (*pos, *neg)
-    elif len(neg) <= 1:
-        ans = pos
-    elif len(pos) <= 2:
-        ans = (pos[0], *neg[:2])
-    else:
-        ans1, ans2 = pos, (pos[0], *neg[:2])
-        ans = max(ans1, ans2, key=lambda x: x[0] * x[1] * x[2])
+    ans1, ans2 = maxs_3, (maxs_3[0], *mins_2)
+    ans = max(ans1, ans2, key=lambda x: x[0] * x[1] * x[2])
 
     return tuple(sorted(ans, reverse=True))
 
@@ -87,7 +77,7 @@ def fun2(s):
     >>> fun2([1, 2, 3, 4, 5, -5, -2, -3])
     (5, -3, -5)
     >>> fun2([-1, -2, -3, -4])
-    (-2, -3, -4)
+    (-1, -2, -3)
     """
 
     s = sorted(s, reverse=True)
@@ -98,8 +88,8 @@ def fun2(s):
     return tuple(sorted(ans, reverse=True))
 
 
-# s = list(map(int, input().split()))
-# print(*fun(s))
+s = list(map(int, input().split()))
+print(*fun(s))
 # print(*fun2(s))
 
 if __name__ == "__main__":
@@ -107,9 +97,9 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    import numpy as np
+    # import numpy as np
 
-    for i in range(1000):
-        s = list(np.random.randint(-100, 101, 10))
-        if not fun(s) == fun2(s):
-            print(s)
+    # for i in range(1000):
+    #     s = list(np.random.randint(-100, 101, 10))
+    #     if not fun(s) == fun2(s):
+    #         print(s)
