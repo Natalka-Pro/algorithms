@@ -57,57 +57,66 @@ cx + dy = f
 https://python.su/forum/topic/33279/
 """
 
-import random
-from math import isclose
+# import random
+# from math import isclose
 
 
-def slau(a, b, c, d, e, f):
+def fun(a, b, c, d, e, f):
+    """
+    >>> fun(1, 0, 0, 1, 3, 3)
+    (2, 3.0, 3.0)
+    >>> fun(1, 1, 2, 2, 1, 2)
+    (1, -1.0, 1.0)
+    >>> fun(0, 2, 0, 4, 1, 2)
+    (4, 0.5)
+    """
+
     det = a * d - b * c
+    delta_x = d * e - b * f
+    delta_y = -c * e + a * f
 
     if det != 0:
-        delta_x = d * e - b * f
-        delta_y = -c * e + a * f
-        return [2, delta_x / det, delta_y / det]
+        return 2, delta_x / det, delta_y / det
     elif b != 0 and d != 0:
         k = a / b
-        if e / b == f / d:  # if isclose(e / b, f / d):
+        if delta_x == 0:  # e / b == f / d:
             if k != 0:
-                return [1, -k, e / b]
+                return 1, -k, e / b
             else:
-                return [4, e / b]
+                return 4, e / b
         else:
-            return [0]
+            return (0,)
     elif b == 0:
         if a == 0:
             if e != 0:
-                return [0]
+                return (0,)
             else:  # a == b == e == 0 => cx + dy = f
                 if d != 0:
                     k = -c / d
                     if k != 0:
-                        return [1, k, f / d]
+                        return 1, k, f / d
                     else:
-                        return [4, f / d]
+                        return 4, f / d
                 else:  # d == 0 => cx = f
                     if c != 0:
                         return 3, f / c
                     elif f != 0:  # c == 0
-                        return [0]
+                        return (0,)
                     else:  # f == 0
-                        return [5]
+                        return (5,)
         else:  # a != 0 => d == 0
             if c != 0:
                 if e / a == f / c:  # if isclose(e / a, f / c):
-                    return [3, e / a]
+                    return 3, e / a
                 else:
-                    return [0]
+                    return (0,)
             elif f != 0:  # c == 0
-                return [0]
+                return (0,)
             else:  # f == 0
-                return [3, e / a]
+                return 3, e / a
 
 
-def solution(a, b, c, d, e, f):
+def fun2(a, b, c, d, e, f):
     delta = a * d - b * c
     delta_x = e * d - b * f
     delta_y = a * f - c * e
@@ -131,33 +140,32 @@ def solution(a, b, c, d, e, f):
         return 2, delta_x / delta, delta_y / delta
 
 
-for i in range(10):
-    l = [float(random.randint(-100, 100)) for _ in range(6)]
-
-    res1, res2 = slau(*l), solution(*l)
-
-    print(l, res1)
-
-    if len(res1) != len(res2):
-        print(l, "не равна длина")
-
-    eq = [isclose(res1[i], res2[i]) for i in range(len(res1))]
-
-    # print(eq)
-
-    if not all(eq):
-        print(res1, res2)
+l = [float(input()) for _ in range(6)]
+print(*fun(*l))
 
 
-# l = [float(input()) for _ in range(6)]
+# for i in range(10):
+#     l = [float(random.randint(-100, 100)) for _ in range(6)]
 
-# print(*slau(*l))
+#     res1, res2 = fun(*l), fun2(*l)
+
+#     print(l, res1)
+
+#     if len(res1) != len(res2):
+#         print(l, "не равна длина")
+
+#     eq = [isclose(res1[i], res2[i]) for i in range(len(res1))]
+
+#     # print(eq)
+
+#     if not all(eq):
+#         print(res1, res2)
+
 
 # a, b, c, d, e, f = l
 # l2 = c, d, a, b, f, e
 # l3 = b, a, d, c, e, f
 # l4 = d, c, b, a, f, e
-
 
 # s = "{0}x + {1}y = {4}\n{2}x + {3}y = {5}".format(*l)
 # print(s)
@@ -177,3 +185,9 @@ for i in range(10):
 # print(*slau(*l2))
 # print(*slau(*l3))
 # print(*slau(*l4))
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
