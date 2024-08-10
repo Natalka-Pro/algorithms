@@ -144,8 +144,8 @@ def fun(K1, M, K2, P2, N2):
         return -1, -1
 
 
-# K1, M, K2, P2, N2 = map(int, input().split())
-# print(*fun(K1, M, K2, P2, N2))
+K1, M, K2, P2, N2 = map(int, input().split())
+print(*fun(K1, M, K2, P2, N2))
 # print(*fun2(K1, M, K2, P2, N2))
 
 if __name__ == "__main__":
