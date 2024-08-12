@@ -109,13 +109,16 @@ def fun(K1, M, K2, P2, N2):
 
     X - количество квартир на каждой лестничной площадке
     Y - номер квартиры на этаже
-    K = ((P - 1) * M + (N - 1)) * X + Y = (P - 1) * M * X + (N - 1) * X + Y
+    K = ((P - 1) * M + (N - 1)) * X + (Y + 1) (0 <= Y < X)
+    K - 1 = ((P - 1) * M + (N - 1)) * X + Y
+    X = ..., Y = ...
+    K - Y - 1 = (P - 1) * M * X + (N - 1) * X
     """
 
     if N2 > M:
         return -1, -1
 
-    X, Y = linear((P2 - 1) * M + (N2 - 1), K2)
+    X, _ = linear((P2 - 1) * M + (N2 - 1), K2 - 1)
 
     if X == "MANY SOLUTIONS":
         if M == 1:
@@ -123,25 +126,33 @@ def fun(K1, M, K2, P2, N2):
         else:
             return 0, 0
 
-    if X == 0 or Y == 0:
+    if X == 0:  # or Y == 0:
         return -1, -1
 
-    answers = Diophantine(M * X, X, K1 - Y)
+    P1, res = linear(M * X, K1 - 1)
+    P1 += 1
 
-    if answers == "NO SOLUTION":
-        return -1, -1
+    N1, _ = linear(X, res)
+    N1 += 1
 
-    for i in answers.copy():
-        P1, N1 = i
-        P1, N1 = P1 + 1, N1 + 1
-        if N1 > M:
-            answers.remove(i)
+    return P1, N1
 
-    if len(answers) == 1:
-        P1, N1 = answers.pop()
-        return P1 + 1, N1 + 1
-    else:
-        return -1, -1
+    # answers = Diophantine(M * X, X, K1 - Y - 1)
+
+    # if answers == "NO SOLUTION":
+    #     return -1, -1
+
+    # for i in answers.copy():
+    #     P1, N1 = i
+    #     P1, N1 = P1 + 1, N1 + 1
+    #     if N1 > M:
+    #         answers.remove(i)
+
+    # if len(answers) == 1:
+    #     P1, N1 = answers.pop()
+    #     return P1 + 1, N1 + 1
+    # else:
+    #     return -1, -1
 
 
 K1, M, K2, P2, N2 = map(int, input().split())
