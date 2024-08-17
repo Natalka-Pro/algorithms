@@ -92,11 +92,12 @@ def fun(N, M, s):
         x, y = map(lambda x: x - 1, i)
         cells = neighbors(x, y, M, N)
 
-        ans[x][y] = "*"
-
         for x, y in cells:
-            if ans[x][y] != "*":
-                ans[x][y] += 1
+            ans[x][y] += 1
+
+    for i in s:
+        x, y = map(lambda x: x - 1, i)
+        ans[x][y] = "*"
 
     return ans
 
