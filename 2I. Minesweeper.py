@@ -50,3 +50,68 @@ M, 1 ≤ M ≤ 100 - количество столбцов на поле, K, 0 �
 2 2 2 1
 1 * 2 *
 """
+
+
+def IsOnField(x, y, N, M):
+    return (0 <= x < M) and (0 <= y < N)
+
+
+def neighbors(x, y, N, M):
+    """
+    >>> neighbors(0, 0, 2, 2)
+    [(1, 0), (1, 1), (0, 1)]
+    >>> neighbors(1, 1, 3, 3)
+    [(1, 0), (2, 0), (2, 1), (2, 2), (1, 2), (0, 2), (0, 1), (0, 0)]
+    """
+    sys = [
+        (x, y - 1),
+        (x + 1, y - 1),
+        (x + 1, y),
+        (x + 1, y + 1),
+        (x, y + 1),
+        (x - 1, y + 1),
+        (x - 1, y),
+        (x - 1, y - 1),
+    ]
+
+    return [i for i in sys if IsOnField(*i, N, M)]
+
+
+def fun(N, M, s):
+    """
+    >>> fun(3, 2, [[1, 1], [2, 2]])
+    [['*', 2], [2, '*'], [1, 1]]
+    >>> fun(2, 2, [])
+    [[0, 0], [0, 0]]
+    >>> fun(4, 4, [[1, 3], [2, 1], [4, 2], [4, 4]])
+    [[1, 2, '*', 1], ['*', 2, 1, 1], [2, 2, 2, 1], [1, '*', 2, '*']]
+    """
+    ans = [[0] * M for _ in range(N)]
+
+    for i in s:
+        x, y = map(lambda x: x - 1, i)
+        cells = neighbors(x, y, M, N)
+
+        ans[x][y] = "*"
+
+        for x, y in cells:
+            if ans[x][y] != "*":
+                ans[x][y] += 1
+
+    return ans
+
+
+def print_matrix(m):
+    for i in m:
+        print(*i)
+
+
+N, M, K = map(int, input().split())
+s = [list(map(int, input().split())) for _ in range(K)]
+
+print_matrix(fun(N, M, s))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
