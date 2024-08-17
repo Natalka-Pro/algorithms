@@ -42,14 +42,24 @@ P1 или N1, вместо соответствующего числа напе�
 def linear(a, b):
     """
     b = a * X + Y
-
+    0 <= Y <= X - 1
     return X, Y
     """
     if a == 0:
         return "MANY SOLUTIONS", b
     else:
-        X, Y = b // a, b % a
-        return X, Y
+        # X, Y = b // a, b % a
+        # return X, Y
+        ans = []
+        min_X = b // (a + 1)
+        max_X = b // a
+
+        for x in range(min_X, max_X + 1):
+            y = b - a * x
+            if 0 <= y <= x - 1:
+                ans.append((x, y))
+
+        return ans
 
 
 def NOD(m, n):
@@ -100,6 +110,8 @@ def fun(K1, M, K2, P2, N2):
     (0, 1)
     >>> fun(3, 2, 2, 2, 1)
     (-1, -1)
+    >>> fun(5, 2, 4, 1, 2)
+    (0, 0)
 
     K1 - квартира, для которой надо узнать подъезд P1 и этаж N1
     M - количество этажей
@@ -118,22 +130,48 @@ def fun(K1, M, K2, P2, N2):
     if N2 > M:
         return -1, -1
 
-    X, _ = linear((P2 - 1) * M + (N2 - 1), K2 - 1)
+    ans = linear((P2 - 1) * M + (N2 - 1), K2 - 1)
 
-    if X == "MANY SOLUTIONS":
-        if M == 1:
-            return 0, 1
-        else:
-            return 0, 0
-
-    if X == 0:  # or Y == 0:
+    if len(ans) == 0:
         return -1, -1
 
-    P1, res = linear(M * X, K1 - 1)
-    P1 += 1
+    if ans[0] == "MANY SOLUTIONS":  # P2 = 1, N2 = 1
+        N1 = P1 = 0
 
-    N1, _ = linear(X, res)
-    N1 += 1
+        if M == 1:  # если всего один этаж
+            N1 = 1
+
+        if K1 <= K2:  # если неизвестная квартира до известной
+            N1 = P1 = 1
+
+        if K1 <= M:  # на этаже как минимум одна квартира => подъезд точно первый
+            P1 = 1
+
+        return P1, N1
+
+    pos_X = [i[0] for i in ans]
+
+    pos_P1, pos_N1 = set(), set()
+
+    for x in pos_X:
+        P1, res = (K1 - 1) // (M * x), (K1 - 1) % (M * x)
+        P1 += 1
+
+        N1 = res // x
+        N1 += 1
+
+        pos_P1.add(P1)
+        pos_N1.add(N1)
+
+    if len(pos_P1) > 1:
+        P1 = 0
+    else:
+        P1 = pos_P1.pop()
+
+    if len(pos_N1) > 1:
+        N1 = 0
+    else:
+        N1 = pos_N1.pop()
 
     return P1, N1
 
@@ -155,6 +193,125 @@ def fun(K1, M, K2, P2, N2):
     #     return -1, -1
 
 
+def fun2(K1, M, K2, P2, N2):
+
+    def trivial_cases(flat, storeys, flat_train, entrance_train, floor_train):
+
+        if storeys < floor_train:
+
+            # этажность меньше исследуемого(кв2) этажа
+
+            return -1, -1
+
+        if flat_train < (storeys * (entrance_train - 1) + floor_train):
+
+            # кв2 меньше минимально возможного значения на `floor_train`(на каждом этаже минимум одна квартира)
+
+            return -1, -1
+
+        if entrance_train == 1 and floor_train == 1:
+
+            # кв2 расположена в 1-ом подъезде и на 1-ом этаже.
+
+            if flat <= flat_train:
+
+                # исследуемая квартира расположена до кв2.
+
+                return 1, 1
+
+            if flat <= storeys:  # flat > 1, storeys > 1
+
+                # квартира расположена в 1-ом подъезде(на каждом этаже минимум одна квартира)
+
+                return 1, 0
+
+            if storeys == 1:
+
+                # этажность=1
+
+                return 0, 1
+
+            # больше ничего не сможем определить(если кв2 в 1 подъезде, на 1 этаже).
+
+            return 0, 0
+
+        # в противном случае возвращаем `False` и продолжаем поиск нетривиальных случаев.
+
+        return False
+
+    def get_entrance_and_floor(flats_per_floor):
+
+        entrance = flat // (storeys * flats_per_floor) + int(
+            flat % (storeys * flats_per_floor) != 0
+        )
+
+        floor = (
+            flat - storeys * flats_per_floor * (entrance - 1)
+        ) // flats_per_floor + int(
+            (flat - storeys * flats_per_floor * (entrance - 1)) % flats_per_floor != 0
+        )
+
+        return entrance, floor
+
+    def main_deсision(flat, storeys, flat_train, entrance_train, floor_train):
+
+        flats_per_floor_min = flat_train // (
+            storeys * (entrance_train - 1) + floor_train
+        ) + int(flat_train % (storeys * (entrance_train - 1) + floor_train) != 0)
+
+        flats_per_floor_max = (flat_train - 1) // (
+            storeys * (entrance_train - 1) + floor_train - 1
+        )
+
+        if (
+            (flats_per_floor_min > flats_per_floor_max)
+            or (flats_per_floor_min < 1)
+            or (flats_per_floor_max > 1000000)
+        ):
+            # не знаю почему, но на всякий - добавил flats_per_floor_max > 1000000
+
+            return -1, -1
+
+        entrance_main, floor_main = get_entrance_and_floor(flats_per_floor_min)
+
+        for flats in range(flats_per_floor_min + 1, flats_per_floor_max + 1):
+
+            entrance, floor = get_entrance_and_floor(flats)
+
+            if entrance != entrance_main:
+
+                entrance_main = 0
+
+            if floor != floor_main:
+
+                floor_main = 0
+
+            if entrance_main == 0 and floor_main == 0:
+
+                break
+
+        if flat <= storeys and entrance_main != 1:
+
+            # если `flat' в 1-ом подъезде и `entrance_main` рассчиталось неверно
+
+            entrance_main = 1
+
+        return entrance_main, floor_main
+
+    flat, storeys, flat_train, entrance_train, floor_train = K1, M, K2, P2, N2
+
+    trivial_deсision = trivial_cases(
+        flat, storeys, flat_train, entrance_train, floor_train
+    )
+
+    if trivial_deсision:
+        return trivial_deсision
+
+    else:
+
+        return main_deсision(flat, storeys, flat_train, entrance_train, floor_train)
+
+
 K1, M, K2, P2, N2 = map(int, input().split())
 print(*fun(K1, M, K2, P2, N2))
 # print(*fun2(K1, M, K2, P2, N2))
@@ -163,3 +320,10 @@ if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+
+    # import random
+
+    # for i in range(1000):
+    #     s = [random.randint(1, 10) for _ in range(5)]
+    #     if not fun(*s) == fun2(*s):
+    #         print(f"{s}, \tTrue: {fun2(*s)}, \tMy: {fun(*s)}")
