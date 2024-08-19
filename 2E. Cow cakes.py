@@ -67,31 +67,31 @@ def fun(s):
     >>> fun([10, 15, 20, 19, 20, 15, 10])
     4
     >>> fun([40, 15, 5, 39, 55, 35, 25, 15, 5])
-    2
+    4
     """
-    sus = []
-    # val2places = {}
-    # vals = []
-
+    sus = 0
     cur_max = s[0]
+
     for i in range(1, len(s) - 1):
         if s[i] > cur_max:
-
             cur_max = s[i]
-            sus = []
-            print(sus)
-            continue
+            sus = 0
 
-        if s[i] % 10 == 5 and s[i + 1] < s[i]:
-            sus.append(s[i])
-            print(sus)
+        elif s[i] % 10 == 5 and s[i + 1] < s[i] and s[i] > sus:
+            sus = s[i]
 
-    if len(sus) == 0:
+    if sus == 0:
         return 0
 
-    print(sus)
+    # определение места для подозрительного значения
+    places = 1
+    # print(sus)
 
-    # return min(places)
+    for elem in s:
+        if elem > sus:
+            places += 1
+
+    return places
 
 
 def fun1(s):
@@ -105,6 +105,8 @@ def fun1(s):
     >>> fun1([10, 15, 20])
     0
     >>> fun1([10, 15, 20, 19, 20, 15, 10])
+    4
+    >>> fun1([40, 15, 5, 39, 55, 35, 25, 15, 5])
     4
     """
     sus = []
@@ -145,6 +147,8 @@ def fun2(s):
     0
     >>> fun2([10, 15, 20, 19, 20, 15, 10])
     4
+    >>> fun2([40, 15, 5, 39, 55, 35, 25, 15, 5])
+    4
     """
     val2places = {}
 
@@ -174,8 +178,8 @@ def fun2(s):
     return min(place_vasiliy)
 
 
-# n, s = int(input()), list(map(int, input().split()))
-# print(fun(s))
+n, s = int(input()), list(map(int, input().split()))
+print(fun(s))
 # print(fun2(s))
 
 if __name__ == "__main__":
