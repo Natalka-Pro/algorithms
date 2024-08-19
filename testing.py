@@ -61,4 +61,34 @@ for string in text.split("\n"):
         ans += string_new + "\n"
 
 f = open("output.txt", "w")
-f.write('"""\n' + ans + '"""\n')
+f.write('"""\n' + ans + '"""\n\n\n')
+
+template = """
+def fun(s):
+    \"\"\"
+    >>> fun([0, 1, 10, 9])
+    ([0, 1], [9, 10], [3])
+    >>> fun([1, 2])
+    ([2], [1], [3])
+    >>> fun([])
+    ([], [], [])
+    \"\"\"
+
+    return
+
+
+N, M = map(int, input().split())
+s = [int(input()) for i in range(N)]
+print(*fun(s))
+
+# print(f">>> fun({s})")
+# print(f"{fun(s)}")
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
+"""
+
+f.write(template)
