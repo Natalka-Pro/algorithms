@@ -74,21 +74,17 @@
 
 
 def manhattan_circle(R):
-    ans = []
-
     for y in range(-R, R + 1):
         x_max = R - abs(y)
         for x in range(-x_max, x_max + 1):
-            ans.append((x, y))
-
-    return ans
+            yield (x, y)
 
 
 def add_shift(dots, shifts):
     ans = []
 
-    for x, y in dots:
-        for x0, y0 in shifts:
+    for x0, y0 in shifts:
+        for x, y in dots:
             ans.append((x + x0, y + y0))
 
     return set(ans)
@@ -96,6 +92,8 @@ def add_shift(dots, shifts):
 
 def fun(t, d, s):
     """
+    ML - 21 test
+
     >>> fun(2, 1, [(0, 1), (-2, 1), (-2, 3), (0, 3), (2, 5)])
     [(1, 5), (2, 4)]
     >>> fun(1, 1, [(0, 0)])
@@ -106,9 +104,10 @@ def fun(t, d, s):
 
     pos = [(0, 0)]
 
-    manhattan_circle_misha = manhattan_circle(t)
-    manhattan_circle_navigator = manhattan_circle(d)
     for i in s:
+        manhattan_circle_misha = manhattan_circle(t)
+        manhattan_circle_navigator = manhattan_circle(d)
+
         pos_misha = add_shift(pos, manhattan_circle_misha)
         pos_navigator = add_shift([i], manhattan_circle_navigator)
         # print(pos_misha)
