@@ -43,24 +43,25 @@ class MiltiSet:
         self.d = {}
 
     def __getitem__(self, key):
-        print("__getitem__")
         if key in self.d:
             return self.d[key]
         else:
             return 0
 
+    def __len__(self):
+        return len(self.d)
+
     def add(self, key):
-        # print("__iadd__")
         if key not in self.d:
             self.d[key] = 0
         self.d[key] += 1
 
-    def sub(self, key):
-        # print("__isub__")
-        if key in self.d and self.d[key] == 1:
-            self.d.pop(key)
-        else:
-            self.d -= 1
+    def pop(self, key):
+        if key in self.d:
+            if self.d[key] == 1:
+                self.d.pop(key)
+            else:
+                self.d[key] -= 1
 
 
 def fun(s, K):
@@ -71,7 +72,7 @@ def fun(s, K):
     (2, 6)
     """
 
-    d = {}
+    d = MiltiSet()
 
     min_len = len(s) + 1
     ans = None
@@ -79,30 +80,18 @@ def fun(s, K):
     right = 0
 
     for left in range(0, len(s)):
-        if s[left - 1] in d:
-            if d[s[left - 1]] == 1:
-                d.pop(s[left - 1])
-            else:
-                d[s[left - 1]] -= 1
+        d.pop(s[left - 1])
 
         while right < len(s) and len(d) != K:
-            if s[right] not in d:
-                d[s[right]] = 0
-            d[s[right]] += 1
-
+            d.add(s[right])
             right += 1
 
-        # print(left, right-1, s[left:right], d, right - left)
         if len(d) == K and right - left < min_len:
             min_len = right - left
             ans = (left + 1, right)
 
     return ans
 
-
-# s = MiltiSet()
-# s[12331]
-# s[123] += 32
 
 N, K = map(int, input().split())
 s = list(map(int, input().split()))
