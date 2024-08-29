@@ -73,6 +73,85 @@
 """
 
 
+def extend(x0, r):
+    """
+    a1 <= x - y <= a2
+    b1 <= x + y <= b2
+    """
+    (a1, a2), (b1, b2) = x0
+
+    a1 -= r
+    a2 += r
+
+    b1 -= r
+    b2 += r
+
+    return (a1, a2), (b1, b2)
+
+
+def intersection(sq1, sq2):
+    a1 = max(sq1[0][0], sq2[0][0])
+    a2 = min(sq1[0][1], sq2[0][1])
+    b1 = max(sq1[1][0], sq2[1][0])
+    b2 = min(sq1[1][1], sq2[1][1])
+
+    return (a1, a2), (b1, b2)
+
+
+def square2points(sq):
+    (a1, a2), (b1, b2) = sq
+
+    # print(sq)
+    # print((b1 - a2)//2, (b2 - a1)//2 + 1, (a1 + b1)//2, (a2 + b2)//2 + 1)
+
+    ans = []
+    for y in range((b1 - a2) // 2, (b2 - a1) // 2 + 1):
+        for x in range((a1 + b1) // 2, (a2 + b2) // 2 + 1):
+            if a1 <= x - y <= a2 and b1 <= x + y <= b2:
+                ans.append((x, y))
+
+    return ans
+
+
+def square2points2(sq):
+    (a1, a2), (b1, b2) = sq
+
+    ans = []
+    for a in range(a1, a2 + 1):
+        for b in range(b1, b2 + 1):
+            x, y = (a + b) % 2, (b - a) % 2
+            if x == 0 and y == 0:
+                x, y = (a + b) // 2, (b - a) // 2
+                ans.append((x, y))
+
+    return ans
+
+
+def fun(t, d, s):
+    """
+    >>> fun(2, 1, [(0, 1), (-2, 1), (-2, 3), (0, 3), (2, 5)])
+    [(1, 5), (2, 4)]
+    >>> fun(1, 1, [(0, 0)])
+    [(-1, 0), (0, -1), (0, 0), (0, 1), (1, 0)]
+    >>> fun(1, 10, [(0, 0)])
+    [(-1, 0), (0, -1), (0, 0), (0, 1), (1, 0)]
+    """
+
+    pos = (0, 0), (0, 0)
+
+    for i in s:
+        area_misha = extend(pos, t)
+
+        x, y = i
+        a = x - y
+        b = x + y
+        area_navigator = extend(((a, a), (b, b)), d)
+
+        pos = intersection(area_misha, area_navigator)
+
+    return sorted(square2points2(pos))
+
+
 def manhattan_circle(R):
     for y in range(-R, R + 1):
         x_max = R - abs(y)
@@ -90,15 +169,15 @@ def add_shift(dots, shifts):
     return set(ans)
 
 
-def fun(t, d, s):
+def fun2(t, d, s):
     """
     ML - 21 test
 
-    >>> fun(2, 1, [(0, 1), (-2, 1), (-2, 3), (0, 3), (2, 5)])
+    >>> fun2(2, 1, [(0, 1), (-2, 1), (-2, 3), (0, 3), (2, 5)])
     [(1, 5), (2, 4)]
-    >>> fun(1, 1, [(0, 0)])
+    >>> fun2(1, 1, [(0, 0)])
     [(-1, 0), (0, -1), (0, 0), (0, 1), (1, 0)]
-    >>> fun(1, 10, [(0, 0)])
+    >>> fun2(1, 10, [(0, 0)])
     [(-1, 0), (0, -1), (0, 0), (0, 1), (1, 0)]
     """
 
@@ -110,10 +189,7 @@ def fun(t, d, s):
 
         pos_misha = add_shift(pos, manhattan_circle_misha)
         pos_navigator = add_shift([i], manhattan_circle_navigator)
-        # print(pos_misha)
-        # print(pos_navigator)
         pos = pos_misha & pos_navigator
-        # print(pos)
 
     return sorted(pos)
 
