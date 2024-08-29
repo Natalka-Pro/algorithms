@@ -68,16 +68,15 @@ def fun(s):
     4
     """
 
-    # N = len(s)
-    # sett = set(s)
     sums2count = {}
 
     for a, b in s:
-        sum = a + b
-        if sum not in sums2count:
-            sums2count[sum] = 0
+        if a >= 0 and b >= 0:
+            sum = a + b
+            if sum not in sums2count:
+                sums2count[sum] = 0
 
-        sums2count[sum] += 1
+            sums2count[sum] += 1
 
     return max(sums2count.values())
 
