@@ -56,34 +56,49 @@ ai и bi, по модулю не превосходящие 10000, описыв�
 """
 
 
-def fun(s):
+def fun(s, N):
     """
-    WA - 4 test
-
-    >>> fun([(2, 0), (0, 2), (2, 2)])
+    >>> fun([(2, 0), (0, 2), (2, 2)], 3)
     2
-    >>> fun([(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)])
+    >>> fun([(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)], 5)
     5
-    >>> fun([(9, 1), (8, 1), (7, 2), (6, 2), (5, 3), (4, 4), (3, 6), (2, 7), (1, 9), (0, 8)])
+    >>> fun([(9, 1), (8, 1), (7, 2), (6, 2), (5, 3), (4, 4), (3, 6), (2, 7), (1, 9), (0, 8)], 10)
     4
     """
 
-    sums2count = {}
+    s = set(s)
+    count = 0
 
     for a, b in s:
-        if a >= 0 and b >= 0:
-            sum = a + b
-            if sum not in sums2count:
-                sums2count[sum] = 0
+        sum = a + b
+        if a >= 0 and b >= 0 and sum == N - 1:
+            count += 1
 
-            sums2count[sum] += 1
+    return count
 
-    return max(sums2count.values())
+
+def fun2(s, N):
+    """
+    >>> fun2([(2, 0), (0, 2), (2, 2)], 3)
+    2
+    >>> fun2([(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)], 5)
+    5
+    >>> fun2([(9, 1), (8, 1), (7, 2), (6, 2), (5, 3), (4, 4), (3, 6), (2, 7), (1, 9), (0, 8)], 10)
+    4
+    """
+
+    used = set()
+
+    for a, b in s:
+        if a >= 0 and b >= 0 and a + b == N - 1 and a not in used:
+            used.add(a)
+
+    return len(used)
 
 
 N = int(input())
 s = [tuple(map(int, input().split())) for _ in range(N)]
-print(fun(s))
+print(fun(s, N))
 
 # print(f">>> fun({s})")
 # print(f"{fun(s)}")
