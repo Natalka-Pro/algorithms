@@ -29,7 +29,7 @@ ababa
 """
 
 
-class MiltiSet:
+class MultiSet:
     def __init__(self):
         self.d = {}
 
@@ -38,6 +38,9 @@ class MiltiSet:
             return self.d[key]
         else:
             return 0
+
+    def __contains__(self, key):
+        return key in self.d
 
     def __len__(self):
         return len(self.d)
@@ -79,7 +82,7 @@ def fun(s, k):
         else:
             return ans, max_len
 
-    d = MiltiSet()
+    d = MultiSet()
 
     max_len = 0
     ans = None

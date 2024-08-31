@@ -38,7 +38,7 @@
 """
 
 
-class MiltiSet:
+class MultiSet:
     def __init__(self):
         self.d = {}
 
@@ -48,8 +48,14 @@ class MiltiSet:
         else:
             return 0
 
+    def __contains__(self, key):
+        return key in self.d
+
     def __len__(self):
         return len(self.d)
+
+    def __str__(self):
+        return self.d.__str__()
 
     def add(self, key):
         if key not in self.d:
@@ -72,7 +78,7 @@ def fun(s, K):
     (2, 6)
     """
 
-    d = MiltiSet()
+    d = MultiSet()
 
     min_len = len(s) + 1
     ans = None
