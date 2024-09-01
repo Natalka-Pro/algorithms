@@ -48,13 +48,7 @@ from collections import Counter
 from itertools import chain
 
 
-def update(d, elem):
-    if elem not in d:
-        d[elem] = 0
-    d[elem] += 1
-
-
-class MultiSet:
+class MultiSet_old:
     def __init__(self):
         self.d = {}
 
@@ -86,8 +80,21 @@ class MultiSet:
                 self.d[key] -= 1
 
 
-def non_equal(d1, d2):
+class MultiSet(Counter):
+    def add(self, key):
+        if key not in self:
+            self[key] = 0
+        self[key] += 1
 
+    def pop(self, key):
+        if key in self:
+            if self[key] == 1:
+                super().pop(key)
+            else:
+                self[key] -= 1
+
+
+def non_equal(d1, d2):
     non_equal_num = 0
 
     for i in chain(range(ord("A"), ord("Z") + 1), range(ord("a"), ord("z") + 1)):
@@ -206,6 +213,12 @@ def fun1(w, s):
             ans += 1
 
     return ans
+
+
+def update(d, elem):
+    if elem not in d:
+        d[elem] = 0
+    d[elem] += 1
 
 
 def fun2(w, s):

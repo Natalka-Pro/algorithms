@@ -28,37 +28,21 @@ ababa
 4 1
 """
 
+from collections import Counter
 
-class MultiSet:
-    def __init__(self):
-        self.d = {}
 
-    def __getitem__(self, key):
-        if key in self.d:
-            return self.d[key]
-        else:
-            return 0
-
-    def __contains__(self, key):
-        return key in self.d
-
-    def __len__(self):
-        return len(self.d)
-
-    def __str__(self):
-        return self.d.__str__()
-
+class MultiSet(Counter):
     def add(self, key):
-        if key not in self.d:
-            self.d[key] = 0
-        self.d[key] += 1
+        if key not in self:
+            self[key] = 0
+        self[key] += 1
 
     def pop(self, key):
-        if key in self.d:
-            if self.d[key] == 1:
-                self.d.pop(key)
+        if key in self:
+            if self[key] == 1:
+                super().pop(key)
             else:
-                self.d[key] -= 1
+                self[key] -= 1
 
 
 def fun(s, k):
