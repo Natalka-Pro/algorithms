@@ -78,7 +78,7 @@ def fun(s):
 
 
 N, M = map(int, input().split())
-s = [int(input()) for i in range(N)]
+s = [int(input()) for _ in range(N)]
 print(*fun(s))
 
 # print(f">>> fun({s})")
