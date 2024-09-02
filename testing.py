@@ -81,6 +81,21 @@ N, M = map(int, input().split())
 s = [int(input()) for _ in range(N)]
 print(*fun(s))
 
+
+# def str2fstr(s):
+#     ans = []
+#     for i in s:
+#         if i.isalpha():
+#             ans.append(f"{{}}")
+#         else:
+#             ans.append(i)
+#     return "".join(ans)
+
+
+# print(f">>> fun({str2fstr('n, m, t')})".format(n, m, t))
+# print(f"    {fun(n, m, t)}")
+
+
 # print(f">>> fun({s})")
 # print(f"    {fun(s)}")
 
