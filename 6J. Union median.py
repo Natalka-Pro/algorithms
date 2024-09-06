@@ -35,10 +35,22 @@
 """
 
 
-def median(s1, s2):
+def median_old(s1, s2):
     L = len(s1)
-
     return sorted(s1 + s2)[L - 1]
+
+
+def median(a, b):
+    L = len(a)
+
+    a_index = b_index = 0
+    while a_index + b_index < L - 1:  # (a + 1) + (b + 1) < L + 1
+        if a[a_index] < b[b_index]:
+            a_index += 1
+        else:
+            b_index += 1
+
+    return min(a[a_index], b[b_index])
 
 
 def fun(s):
@@ -59,24 +71,6 @@ def fun(s):
 N, L = map(int, input().split())
 s = [list(map(int, input().split())) for _ in range(N)]
 print(*fun(s), sep="\n")
-
-
-# def str2fstr(s):
-#     ans = []
-#     for i in s:
-#         if i.isalpha():
-#             ans.append(f"{{}}")
-#         else:
-#             ans.append(i)
-#     return "".join(ans)
-
-
-# print(f">>> fun({str2fstr('n, m, t')})".format(n, m, t))
-# print(f"    {fun(n, m, t)}")
-
-
-# print(f">>> fun({s})")
-# print(f"    {fun(s)}")
 
 
 if __name__ == "__main__":

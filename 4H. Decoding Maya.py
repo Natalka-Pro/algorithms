@@ -112,6 +112,8 @@ def non_equal(d1, d2):
 
 def fun(w, s):
     """
+    Python 3.9 (PyPy 7.3.16)
+
     >>> fun("cAda", "AbrAcadAbRa")
     2
     >>> fun("cAda", "qweqqweqweAbrAcadAbRacAda")
