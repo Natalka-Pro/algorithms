@@ -45,42 +45,38 @@ from itertools import permutations
 def find_vars(keys, d):
     """
     1) первый ключ один раз и остальные два по одному разу (без повторов)
-    2) первый ключ два раза
-    3) первый ключ 3 раза
+    2) первый ключ один раз и остальные два одинаковые
+    3) первый ключ два раза
+    4) первый ключ 3 раза
     """
 
     R_L = len(keys)
+    ans = (R_L - 2) * (R_L - 1) // 2 * 6
 
     l_2 = 0
-    l_3 = 0
-
-    ans1 = 0
-    for i in range(len(keys)):
-        if d[keys[i]] == 2:
+    for i in range(1, len(keys)):
+        if d[keys[i]] >= 2:
             l_2 += 1
-        elif d[keys[i]] > 2:
-            l_3 += 1
 
-        num = R_L - 2 - i
-        ans1 += (num + 1) * num // 2
+    ans += l_2 * 3
 
-    ans1 *= 6
+    if d[keys[0]] >= 2:
+        ans += (R_L - 1) * 3
 
-    ans2 = l_2 * (R_L - 1) * 3
+    if d[keys[0]] >= 3:
+        ans += 1
 
-    ans3 = l_3
-
-    return ans1 + ans2 + ans3
+    return ans
 
 
 def fun(s, k):
     """
-    WA - 14 test
+    TL - 30 test
 
     >>> fun([1, 1, 2, 2, 3], 2)
     9
-    # >>> fun([1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8], 2)
-    # 181
+    >>> fun([1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8], 2)
+    181
     """
 
     s.sort()
@@ -100,13 +96,16 @@ def fun(s, k):
 
         ans += find_vars(s[left:right], d)
 
-        if right == len(s):
-            break
-
     return ans
 
 
 def right_answer(s, k):
+    """
+    >>> right_answer([1, 1, 2, 2, 3], 2)
+    9
+    >>> right_answer([1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8], 2)
+    181
+    """
 
     s = set(permutations(s, 3))
 
@@ -119,10 +118,8 @@ def right_answer(s, k):
 
 _, k = map(int, input().split())
 s = list(map(int, input().split()))
-print(right_answer(s, k))
 print(fun(s, k))
 
-# print(right_answer([1, 1, 2, 2, 3], 2))
 
 # print(f">>> fun({s}, {k})")
 # print(f"    {fun(s, k)}")
