@@ -86,10 +86,10 @@ def fun(s, k):
     s = list(d.keys())  # только уникальные отсортированные карточки
 
     # сколько карточек в количестве >= 2 между [left+1 и right-1]
-    more2count = d[s[0]] >= 2  # обнулится в начале цикла
+    more2count = 0
     ans = 0
 
-    right = 1
+    right = 0
     for left in range(len(s)):
         num_left = d[s[left]]
         more2count -= num_left >= 2
