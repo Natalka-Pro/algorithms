@@ -42,28 +42,27 @@ from collections import defaultdict
 from itertools import permutations
 
 
-def find_vars(keys, d):
+def find_vars(N, num_first, more2count):
     """
     1) первый ключ один раз и остальные два по одному разу (без повторов)
-    2) первый ключ один раз и остальные два одинаковые
-    3) первый ключ два раза
-    4) первый ключ 3 раза
+    2) первый ключ один раз и остальные два одинаковые (more2count)
+    3) первый ключ два раза (num_first >= 2)
+    4) первый ключ 3 раза (num_first >= 3)
     """
 
-    R_L = len(keys)
-    ans = (R_L - 2) * (R_L - 1) // 2 * 6
+    ans = (N - 2) * (N - 1) // 2 * 6
 
-    l_2 = 0
-    for i in range(1, len(keys)):
-        if d[keys[i]] >= 2:
-            l_2 += 1
+    # l_2 = 0
+    # for i in range(1, len(keys)):         # TL!!!
+    #     if d[keys[i]] >= 2:
+    #         l_2 += 1
 
-    ans += l_2 * 3
+    ans += more2count * 3
 
-    if d[keys[0]] >= 2:
-        ans += (R_L - 1) * 3
+    if num_first >= 2:
+        ans += (N - 1) * 3
 
-    if d[keys[0]] >= 3:
+    if num_first >= 3:
         ans += 1
 
     return ans
@@ -71,10 +70,10 @@ def find_vars(keys, d):
 
 def fun(s, k):
     """
-    TL - 30 test
-
     >>> fun([1, 1, 2, 2, 3], 2)
     9
+    >>> fun([1, 1, 2, 2, 3, 3], 2)
+    12
     >>> fun([1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8], 2)
     181
     """
@@ -84,17 +83,25 @@ def fun(s, k):
     for i in s:
         d[i] += 1
 
-    s = list(d.keys())  # только уникальные карточки
+    s = list(d.keys())  # только уникальные отсортированные карточки
+
+    # сколько карточек в количестве >= 2 между [left+1 и right-1]
+    more2count = d[s[0]] >= 2  # обнулится в начале цикла
     ans = 0
 
-    right = 0
+    right = 1
     for left in range(len(s)):
+        num_left = d[s[left]]
+        more2count -= num_left >= 2
+
         while right < len(s) and s[right] <= s[left] * k:
+            more2count += d[s[right]] >= 2
             right += 1
 
-        # print(left, right, s[left], s[right - 1])
+        # print(left, right, s[left], s[right - 1], more2count)
 
-        ans += find_vars(s[left:right], d)
+        lenght = right - left
+        ans += find_vars(lenght, num_left, more2count)
 
     return ans
 
@@ -103,6 +110,8 @@ def right_answer(s, k):
     """
     >>> right_answer([1, 1, 2, 2, 3], 2)
     9
+    >>> right_answer([1, 1, 2, 2, 3, 3], 2)
+    12
     >>> right_answer([1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8], 2)
     181
     """
