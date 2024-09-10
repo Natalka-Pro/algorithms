@@ -44,33 +44,65 @@ abc
 
 def fun(s, K):
     """
-    TL - 26 test
-
     >>> fun('zabacabab', 2)
     5
     >>> fun('abc', 2)
     0
     >>> fun('abcabcac', 3)
     10
+    >>> fun('abcdeabcdfa', 5)
+    11
     """
 
     ans = 0
-    for left in range(len(s) - K):
-        right = left + K
 
+    left = 0
+    right = K
+    while left < len(s) - K:
+
+        symb_ok = 0
         while right < len(s) and s[right - K] == s[right]:
-            # print(left, right, ans)
             right += 1
-            ans += 1
+            symb_ok += 1
 
-        # print(left, right, ans)
+        ans += (symb_ok + 1) * symb_ok // 2
+
+        right += 1
+        left = right - K
+
+    return ans
+
+
+def fun2(s, K):
+    """
+    From the lecture
+
+    >>> fun2('zabacabab', 2)
+    5
+    >>> fun2('abc', 2)
+    0
+    >>> fun2('abcabcac', 3)
+    10
+    >>> fun2('abcdeabcdfa', 5)
+    11
+    """
+
+    ans = 0
+    prevlen = 0
+
+    for i in range(K, len(s)):
+        if s[i] == s[i - K]:
+            prevlen += 1
+            ans += prevlen
+        else:
+            prevlen = 0
 
     return ans
 
 
 K = int(input())
 s = input()
-print(fun(s, K))
+print(fun2(s, K))
 
 
 # def str2fstr(s):
