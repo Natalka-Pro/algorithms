@@ -86,14 +86,15 @@ print(*fun(s))
 #     ans = []
 #     for i in s:
 #         if i.isalpha():
-#             ans.append(f"{{}}")
+#             ans.append(f"{{{i}}}")
 #         else:
 #             ans.append(i)
 #     return "".join(ans)
 
 
-# print(f">>> fun({str2fstr('n, m, t')})".format(n, m, t))
-# print(f"    {fun(n, m, t)}")
+# q = "K, s"
+# print(f"fun({q})\n>>> fun({str2fstr(q)})")
+# print(f">>> fun({str2fstr(q)})".format(*eval(q)))
 
 
 # print(f">>> fun({s})")
