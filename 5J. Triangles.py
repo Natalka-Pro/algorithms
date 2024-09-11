@@ -42,24 +42,26 @@
 4
 """
 
-from collections import defaultdict
-
 
 def shifted_points(points, O):
-    mas = [None] * len(points)
+    mas = [None] * len(points)  # Массив длин
 
+    dubls = 0
+    s = set()
     for i, p in enumerate(points):
         x, y = p[0] - O[0], p[1] - O[1]
         l = x**2 + y**2
+        # if y < 0:
+        #     y = -y
+        # elif y == 0 and x < 0:
+        #     x = -x
+        s.add((x, y))
+        if (-x, -y) in s:
+            dubls += 1
 
-        if y < 0:
-            y = -y
-        elif y == 0 and x < 0:
-            x = -x
+        mas[i] = l  # (l, x, y)
 
-        mas[i] = (l, x, y)
-
-    return mas
+    return mas, dubls
 
 
 def fun(s):
@@ -78,31 +80,26 @@ def fun(s):
         O = s[i]
         points = s[:i] + s[i + 1 :]
 
-        mas = shifted_points(points, O)
+        mas, dubls = shifted_points(points, O)
+        ans -= dubls
+
         mas.sort()
 
         left = right = 0
         while left < len(mas):
-            while right < len(mas) and mas[left][0] == mas[right][0]:
+            while right < len(mas) and mas[left] == mas[right]:
                 right += 1
 
-            n = right - left
-
-            mset = defaultdict(int)
-            for i in mas[left:right]:
-                mset[i] += 1
-
-            dubl = 0
-            for i in mset:
-                if mset[i] > 1:
-                    dubl += 1
-
-            vars = n * (n - 1) // 2 - dubl
-            ans += vars
-
-            # print(n, O, mset, vars)
-
+            n = right - left - 1
+            ans += (n + 1) * n // 2
             left = right
+
+        # right = 0
+        # for left in range(len(mas)):
+        #     while right < len(mas) and mas[left] == mas[right]:
+        #         right += 1
+
+        #     ans += right - left - 1
 
     return ans
 
