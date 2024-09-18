@@ -25,10 +25,6 @@ def depth(tree):
 
     if tree is None:
         return 0
-    # elif tree["Right"] is None:
-    #     return 1 + depth(tree["Left"])
-    # elif tree["Left"] is None:
-    #     return 1 + depth(tree["Right"])
     else:
         return 1 + max(depth(tree["Left"]), depth(tree["Right"]))
 
@@ -53,34 +49,46 @@ def add(tree, item):
             add(tree["Left"], item)
 
 
-# def make_treelib(tree):
-#     from anytree import Node, RenderTree
+def tree2list(tree, l=[]):
+    if tree["Right"] is None and tree["Left"] is None:
+        return l
+    else:
 
-#     udo = Node("Udo")
-#     marc = Node("Marc", parent=udo)
-#     lian = Node("Lian", parent=marc)
-#     dan = Node("Dan", parent=udo)
-#     jet = Node("Jet", parent=dan)
-#     jan = Node("Jan", parent=dan)
-#     joe = Node("Joe", parent=dan)
+        if tree["Left"] is not None:
+            l.append((tree["Key"], tree["Left"]["Key"]))
+            l = tree2list(tree["Left"], l)
 
-#     print(udo)
-#     Node('/Udo')
-#     print(joe)
-#     Node('/Udo/Dan/Joe')
+        if tree["Right"] is not None:
+            l.append((tree["Key"], tree["Right"]["Key"]))
+            l = tree2list(tree["Right"], l)
 
-#     for pre, fill, node in RenderTree(udo):
-#         print("%s%s" % (pre, node.name))
-#     # Udo
-#     # ├── Marc
-#     # │   └── Lian
-#     # └── Dan
-#     #     ├── Jet
-#     #     ├── Jan
-#     #     └── Joe
+        return l
 
-#     print(dan.children)
-#     (Node('/Udo/Dan/Jet'), Node('/Udo/Dan/Jan'), Node('/Udo/Dan/Joe'))
+
+def make_treelib(tree):
+    # https://stackoverflow.com/questions/2358045/how-can-i-implement-a-tree-in-python
+    from anytree import Node, RenderTree
+
+    l = tree2list(tree)
+
+    key2Node = {}
+    root = Node(tree["Key"])
+    key2Node[tree["Key"]] = root
+
+    for parent_key, child_key in l:
+        key2Node[child_key] = Node(child_key, parent=key2Node[parent_key])
+
+    for pre, fill, node in RenderTree(root):
+        print("%s%s" % (pre, node.name))
+    # 7
+    # ├── 3
+    # │   ├── 2
+    # │   │   └── 1
+    # │   └── 5
+    # │       ├── 4
+    # │       └── 6
+    # └── 9
+    #     └── 8
 
 
 def fun(s):
@@ -94,6 +102,7 @@ def fun(s):
     for item in s[1:]:
         add(tree, item)
 
+    # make_treelib(tree)
     return depth(tree)
 
 
