@@ -47,12 +47,15 @@ def maketree(s):
     return tree
 
 
-def find_maxs(tree, x=[]):
+def find_maxs(tree, ans=None):
     # def x(ans=[]):            !!!!!!!!!!!!
     #     ans.append(1)
     #     return ans
 
-    ans = x.copy()
+    # ans = x.copy()
+    if ans is None:
+        ans = []
+
     ans.append(tree["Key"])
     ans.sort()
     if len(ans) > 2:
