@@ -49,6 +49,15 @@ def add(tree, item):
             add(tree["Left"], item)
 
 
+def maketree(s):
+    tree = {"Key": s[0], "Left": None, "Right": None}
+
+    for item in s[1:]:
+        add(tree, item)
+
+    return tree
+
+
 def tree2list(tree, l=[]):
     if tree["Right"] is None and tree["Left"] is None:
         return l
@@ -97,11 +106,7 @@ def fun(s):
     4
     """
 
-    tree = {"Key": s[0], "Left": None, "Right": None}
-
-    for item in s[1:]:
-        add(tree, item)
-
+    tree = maketree(s)
     # make_treelib(tree)
     return depth(tree)
 
