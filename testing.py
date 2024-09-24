@@ -93,7 +93,7 @@ print(*fun(s))
 
 
 # q = "K, s"
-# print(f"fun({q})\n>>> fun({str2fstr(q)})")
+# print(f"fun({q})\\n>>> fun({str2fstr(q)})")
 # print(f">>> fun({str2fstr(q)})".format(*eval(q)))
 
 
