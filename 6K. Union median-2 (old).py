@@ -47,20 +47,59 @@ a < m, 0≤c<m, 0≤d1<m. Гарантируется, что все члены �
 1 7 16 16 21 22
 """
 
+# from functools import partial
 
-def seq_full(l, x1, d1, a, c, m):
-    seq = [x1]
-    d = d1
-    for _ in range(l - 1):
-        seq.append(seq[-1] + d)
+
+# def seq(L, x, d, a, c, m):
+#     yield x
+#     i = 0
+#     while i < L - 1:
+#         x = x + d
+#         yield x
+#         d = (a * d + c) % m
+#         i += 1
+
+
+# def seq_full(L, x, d, a, c, m):
+#     ML - 27 test !!!
+#     seq = [None] * L
+#     seq[0] = x
+#     i = 1
+#     while i < L:
+#         x = x + d
+#         seq[i] = x
+#         d = (a * d + c) % m
+#         i += 1
+
+#     return seq
+
+
+def seq_full(L, x, d, a, c, m):
+    seq = []
+    seq.append(x)
+    i = 1
+    while i < L:
+        x = x + d
+        seq.append(x)
         d = (a * d + c) % m
+        i += 1
+
     return seq
 
 
-def lfind(l, r, check, params):
+# def seq_full(l, x1, d1, a, c, m):
+#     seq = [x1]
+#     d = d1
+#     for _ in range(l - 1):
+#         seq.append(seq[-1] + d)
+#         d = ((a * d + c) % m)
+#     return seq
+
+
+def lfind(l, r, check):
     while l < r:
         m = (l + r) // 2
-        if check(m, params):
+        if check(m):
             r = m
         else:
             l = m + 1
@@ -68,49 +107,72 @@ def lfind(l, r, check, params):
     return l
 
 
-def check(index, params):
-    s, x = params
-    return s[index] >= x
+def rfind(l, r, check):
+    while l < r:
+        m = (l + r + 1) // 2
+        if check(m):
+            l = m
+        else:
+            r = m - 1
+
+    return l
 
 
-def cntless(s, x):
-    ans = lfind(0, len(s) - 1, check, (s, x))
+def num_greater_x(s, x):
+    if x >= s[-1]:
+        return 0
 
-    if s[ans] < x:
-        return len(s)
-    return ans
+    return len(s) - lfind(0, len(s) - 1, lambda m: s[m] > x)
 
 
-def cntgt(s, x):
-    return len(s) - cntless(s, x + 1)
+def num_lower_x(s, x):
+    if x <= s[0]:
+        return 0
+
+    return 1 + rfind(0, len(s) - 1, lambda m: s[m] < x)
+
+
+# def check(m, a, b, L):
+#     num_g = num_greater_x(a, m) + num_greater_x(b, m)
+#     num_l = num_lower_x(a, m) + num_lower_x(b, m)
+
+#     if num_l <= L - 1 and num_g <= L:
+#         return 0
+#     elif num_l >= L:
+#         return -1
+#     elif num_g > L:
+#         return 1
 
 
 def median_bin(s1, s2):
+    # a, b = seq_full(*s1, L), seq_full(*s2, L)
+    # a, b = s1, s2
+    L = len(s1)
 
     l = min(s1[0], s2[0])
     r = max(s1[-1], s2[-1])
 
-    L = len(s1)
-
     while l < r:
         m = (l + r) // 2
+        # res = check(m, s1, s2, L)
+        num_g = num_greater_x(s1, m) + num_greater_x(s2, m)
+        num_l = num_lower_x(s1, m) + num_lower_x(s2, m)
 
-        less = cntless(s1, m) + cntless(s2, m)
-        great = cntgt(s1, m) + cntgt(s2, m)
-
-        if less <= L - 1 and great <= L:
-            return m
-        elif less >= L:
+        if num_l >= L:
             r = m - 1
-        elif great > L:
+        elif num_g > L:
             l = m + 1
+        elif num_l <= L - 1 and num_g <= L:
+            return m
 
     return l
 
 
 def fun(s, L):
     """
+    Not use
     TL - 14 test
+    ML - 27 test
 
     >>> fun([[1, 3, 1, 0, 5], [0, 2, 1, 1, 100], [1, 6, 8, 5, 11]], 6)
     [7, 10, 9]
@@ -120,33 +182,102 @@ def fun(s, L):
 
     for i in range(len(s)):
         for j in range(i + 1, len(s)):
-            ans.append(median_bin(seq_full(L, *s[i]), seq_full(L, *s[j])))
+            ans.append(median_bin(s[i], s[j], L))
 
     return ans
 
 
-N, L = map(int, input().split())
+# def median(s1, s2, L):
+#     a, b = seq(*s1, L), seq(*s2, L)
+#     a_val, b_val = next(a), next(b)
+#     a_index = b_index = 0
+
+#     while a_index + b_index < L - 1:  # (a + 1) + (b + 1) < L + 1
+
+#         if a_val < b_val:
+#             a_index += 1
+#             a_val = next(a)
+#         else:
+#             b_index += 1
+#             b_val = next(b)
+
+#     return min(a_val, b_val)
+
+
+# def fun2(s, L):
+#     """
+#     TL - 14 test
+
+#     >>> fun2([[1, 3, 1, 0, 5], [0, 2, 1, 1, 100], [1, 6, 8, 5, 11]], 6)
+#     [7, 10, 9]
+#     """
+
+#     ans = []
+
+#     for i in range(len(s)):
+#         for j in range(i + 1, len(s)):
+#             ans.append(median(s[i], s[j], L))
+
+#     return ans
+
+
+# N, L = map(int, input().split())
 # s = [list(map(int, input().split())) for _ in range(N)]
 # print(*fun(s, L), sep="\n")
 # TL - 14 test !!!
+
+
+N, L = map(int, input().split())
 
 s = []
 for i in range(N):
     x1, d1, a, c, m = map(int, input().split())
     s.append(seq_full(L, x1, d1, a, c, m))
 
-# ans = []
 for i in range(len(s)):
     for j in range(i + 1, len(s)):
         print(median_bin(s[i], s[j]))
-# print(*ans, sep="\n")
 
 
 # print(f">>> fun({s}, {L})")
 # print(f"    {fun(s, L)}")
 
 
-if __name__ == "__main__":
-    import doctest
+# if __name__ == "__main__":
+#     import doctest
 
-    doctest.testmod()
+#     doctest.testmod()
+
+#     import random
+
+#     for i in range(1000):
+#         # N = random.randint(2, 200)
+#         # L = random.randint(1, 50000)
+
+#         # N = random.randint(2, 100)
+#         N = 2
+#         L = random.randint(1, 50000)
+
+#         s = [None] * N
+#         for i in range(N):
+#             # m = random.randint(1, 40000)
+#             # a = c = d = random.randint(0, m)
+#             m = random.randint(1, 40000)
+#             a = c = d = random.randint(0, 0)
+#             x = random.randint(-10**9, 10**9)
+
+#             s[i] = [x, d, a, c, m]
+
+#         # print(N, L)
+#         # ans1 = fun(s, L)
+#         # print("fun")
+#         # ans2 = fun2(s, L)
+#         # print("fun2")
+
+#         ans1 = median_bin(s[0], s[1], L)
+#         ans2 = median(s[0], s[1], L)
+
+#         # print(ans1, ans2)
+
+#         if not (ans1 == ans2):
+#             print(f"{s, L}, \tTrue: {ans2}, \tMy: {ans1}")

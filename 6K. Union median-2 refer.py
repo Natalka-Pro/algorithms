@@ -48,7 +48,7 @@ a < m, 0≤c<m, 0≤d1<m. Гарантируется, что все члены �
 """
 
 
-def seq_full(l, x1, d1, a, c, m):
+def gensequence(l, x1, d1, a, c, m):
     seq = [x1]
     d = d1
     for _ in range(l - 1):
@@ -57,96 +57,60 @@ def seq_full(l, x1, d1, a, c, m):
     return seq
 
 
-def lfind(l, r, check, params):
+def lbinsearch(l, r, check, checkparams):
     while l < r:
         m = (l + r) // 2
-        if check(m, params):
+        if check(m, checkparams):
             r = m
         else:
             l = m + 1
-
     return l
 
 
-def check(index, params):
-    s, x = params
-    return s[index] >= x
+def checkisge(index, params):
+    seq, x = params
+    return seq[index] >= x
 
 
-def cntless(s, x):
-    ans = lfind(0, len(s) - 1, check, (s, x))
+# def checkisgt(index, params):
+#     seq, x = params
+#     return seq[index] > x
 
-    if s[ans] < x:
-        return len(s)
+
+def cntless(seq, x):
+    ans = lbinsearch(0, len(seq) - 1, checkisge, (seq, x))
+    if seq[ans] < x:
+        return len(seq)
     return ans
 
 
-def cntgt(s, x):
-    return len(s) - cntless(s, x + 1)
+def cntgt(seq, x):
+    return len(seq) - cntless(seq, x + 1)
 
 
-def median_bin(s1, s2):
-
-    l = min(s1[0], s2[0])
-    r = max(s1[-1], s2[-1])
-
-    L = len(s1)
+def medianmerge(seq1, seq2):
+    l = min(seq1[0], seq2[0])
+    r = max(seq1[-1], seq2[-1])
 
     while l < r:
         m = (l + r) // 2
-
-        less = cntless(s1, m) + cntless(s2, m)
-        great = cntgt(s1, m) + cntgt(s2, m)
-
-        if less <= L - 1 and great <= L:
+        less = cntless(seq1, m) + cntless(seq2, m)
+        gt = cntgt(seq1, m) + cntgt(seq2, m)
+        if less <= len(seq1) - 1 and gt <= len(seq1):
             return m
-        elif less >= L:
-            r = m - 1
-        elif great > L:
+        if gt > len(seq1):
             l = m + 1
-
+        if less > len(seq1) - 1:
+            r = m - 1
     return l
 
 
-def fun(s, L):
-    """
-    TL - 14 test
-
-    >>> fun([[1, 3, 1, 0, 5], [0, 2, 1, 1, 100], [1, 6, 8, 5, 11]], 6)
-    [7, 10, 9]
-    """
-
-    ans = []
-
-    for i in range(len(s)):
-        for j in range(i + 1, len(s)):
-            ans.append(median_bin(seq_full(L, *s[i]), seq_full(L, *s[j])))
-
-    return ans
-
-
-N, L = map(int, input().split())
-# s = [list(map(int, input().split())) for _ in range(N)]
-# print(*fun(s, L), sep="\n")
-# TL - 14 test !!!
-
-s = []
-for i in range(N):
+n, l = map(int, input().split())
+seqs = []
+for i in range(n):
     x1, d1, a, c, m = map(int, input().split())
-    s.append(seq_full(L, x1, d1, a, c, m))
+    seqs.append(gensequence(l, x1, d1, a, c, m))
 
-# ans = []
-for i in range(len(s)):
-    for j in range(i + 1, len(s)):
-        print(median_bin(s[i], s[j]))
-# print(*ans, sep="\n")
-
-
-# print(f">>> fun({s}, {L})")
-# print(f"    {fun(s, L)}")
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
+for i in range(n):
+    for j in range(i + 1, n):
+        print(medianmerge(seqs[i], seqs[j]))
