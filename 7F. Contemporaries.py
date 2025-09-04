@@ -82,26 +82,24 @@ def fun(segments):
     0
     """
 
-    # N = len(segments)
     events = []
 
     for i, (d1, m1, y1, d2, m2, y2) in enumerate(segments):
 
         start, end = find_adulthood((y1, m1, d1), (y2, m2, d2))
-        # start, end = (y1, m1, d1), (y2, m2, d2)
-        if start != end:
+        if start != end:  # а если родился и сразу умер?
             events.append((start, IN, i + 1))
             events.append((end, OUT, i + 1))
 
     events.sort()
-    # print(*events, sep="\n")
 
     if len(events) == 0:
         return 0
 
     num = 0
-    ans = [set()]  # для хранения современников
-    wait_another = set()
+    ans = []  # для хранения множеств современников
+    current_alive = set()
+    first_death = True  # после второй смерти не нужно добавлять в ans
 
     for i in range(len(events)):
         _, type, person = events[i]
@@ -109,30 +107,19 @@ def fun(segments):
         if type == IN:
             num += 1
 
-            if len(wait_another) == 0:
-                ans[-1].add(person)
-            else:
-                ans.append(wait_another.copy())
-                ans[-1].add(person)
-
-            # print(person, num, ans)
+            first_death = True
+            current_alive.add(person)
 
         elif type == OUT:
             num -= 1
-            if num == 0:
-                ans.append(set())
-            else:
-                if len(wait_another) == 0:
-                    # print("new wait_another")
-                    wait_another = ans[-1].copy()
 
-                # print(11, wait_another, ans[-1], id(wait_another), id(ans[-1]))
-                wait_another.remove(person)
-                # print(22, wait_another, ans[-1], id(wait_another), id(ans[-1]))
+            if first_death:
+                ans.append(current_alive.copy())
+                first_death = False
 
-            # print(person, num, ans)
+            current_alive.remove(person)
 
-    return ans[:-1]
+    return ans
 
 
 N = int(input())
