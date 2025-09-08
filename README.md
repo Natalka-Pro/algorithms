@@ -8,7 +8,7 @@
 
 3. Sets
 
-4. "Dictionaries and counting sorting
+4. Dictionaries and counting sorting
 
 5. Prefix sums and two pointers
 
