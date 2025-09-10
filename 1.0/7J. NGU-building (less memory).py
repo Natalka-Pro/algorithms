@@ -62,20 +62,15 @@ OUT = -1
 # чтобы нулевое пересечение не посчитать
 
 
-def fun(s, W, L):
-    """
-    ML - 29 test
-    
-    >>> fun([[0, 0, 0, 10, 10, 10]], 10, 10)
-    ['YES', 1, 1]
-    >>> fun([[0, 0, 0, 10, 5, 5], [0, 5, 5, 10, 10, 10]], 10, 10)
-    ['NO']
-    """
+def fun(N, W, L):
+    # OK - 0.649s 42.48Mb
+    # в худшем случае квадратичная сложность из-за копирования множества
 
     TOTAL_SQUARE = W * L
     events = []
 
-    for i, (x1, y1, z1, x2, y2, z2) in enumerate(s):
+    for i in range(N):
+        x1, y1, z1, x2, y2, z2 = map(int, input().split())
         # (time, type, square, idx)
         events.append((z2, OUT, (y2 - y1) * (x2 - x1), i+1))
         events.append((z1, IN, (y2 - y1) * (x2 - x1), i+1))
@@ -85,13 +80,11 @@ def fun(s, W, L):
     best_blocks = set()
 
     events.sort()
-    # print(events)
 
     for _, type, square, idx in events:
         if type == IN:
             cur_square += square
             cur_blocks.add(idx)
-            # print(1, cur_blocks)
 
         if type == OUT:
             cur_square -= square
@@ -99,7 +92,6 @@ def fun(s, W, L):
 
         if cur_square == TOTAL_SQUARE and (len(best_blocks) == 0 or len(cur_blocks) < len(best_blocks)):
             best_blocks = cur_blocks.copy()
-            # print(2, best_blocks)
 
         
     if len(best_blocks) == 0:
@@ -113,16 +105,65 @@ def fun(s, W, L):
     return ans
 
 
+def fun(N, W, L):
+    # OK - 0.648s 38.61Mb
+    # за два прохода по events
+
+    TOTAL_SQUARE = W * L
+    events = []
+
+    for i in range(N):
+        x1, y1, z1, x2, y2, z2 = map(int, input().split())
+        # (time, type, square, idx)
+        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i+1))
+        events.append((z1, IN, (y2 - y1) * (x2 - x1), i+1))
+
+    events.sort()
+
+    cur_square = 0 # есть покрытие => площадь при фиксированном z == полной
+    cur_num_blocks = 0 # можно хранить количество, а не множество (выигрыш по памяти)
+    best_num_blocks = N + 1
+
+    for _, type, square, idx in events:
+        if type == IN:
+            cur_square += square
+            cur_num_blocks += 1
+
+        if type == OUT:
+            cur_square -= square
+            cur_num_blocks -= 1
+
+        if cur_square == TOTAL_SQUARE and cur_num_blocks < best_num_blocks:
+            # best_blocks = cur_blocks.copy()
+            best_num_blocks = cur_num_blocks
+
+    if best_num_blocks == N + 1:
+        return ["NO"]
+    
+
+    cur_square = 0
+    best_blocks = set()
+
+    for _, type, square, idx in events:
+        if type == IN:
+            cur_square += square
+            best_blocks.add(idx)
+
+        if type == OUT:
+            cur_square -= square
+            best_blocks.remove(idx)
+
+        if cur_square == TOTAL_SQUARE and len(best_blocks) == best_num_blocks:
+            break
+
+
+    ans = ["YES", len(best_blocks)]
+
+    for elem in list(best_blocks):
+        ans.append(elem)
+
+    return ans
+
+
 N, W, L = map(int, input().split())
-s = [list(map(int, input().split())) for _ in range(N)]
-print(*fun(s, W, L), sep="\n")
-
-# print(fun([[0, 0, 0, 10, 10, 10]], 10, 10))
-
-# print(f">>> fun({s}, {W}, {L})")
-# print(fun(s, W, L))
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
+print(*fun(N, W, L), sep="\n")

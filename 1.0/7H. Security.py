@@ -73,7 +73,7 @@ def fun(s):
 
     for time, type, person in events:
 
-        if time != prev_time:
+        if time != prev_time: # ненулевое время прошло
             if num == 1:  # в current_persons один элемент
                 elem = current_persons.pop()
                 current_persons.add(elem)

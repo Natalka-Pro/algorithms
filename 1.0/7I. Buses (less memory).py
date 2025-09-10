@@ -68,31 +68,22 @@ Fi, время отправления Xi, номер города назначе
 IN = -1
 OUT = 1
 
-def fun(s):
-    """
-    >>> fun([['2', '20:00', '1', '10:00'], ['1', '08:00', '2', '21:00']])
-    3
-    >>> fun([['1', '09:00', '2', '20:00'], ['2', '20:00', '1', '09:00']])
-    1
-    >>> fun([['3', '03:52', '1', '08:50'], ['1', '18:28', '3', '21:53'], ['2', '03:58', '3', '09:00'], ['3', '14:59', '2', '21:13']])
-    2
-    """
+def fun(M):
+    # """
+    # >>> fun([['2', '20:00', '1', '10:00'], ['1', '08:00', '2', '21:00']])
+    # 3
+    # >>> fun([['1', '09:00', '2', '20:00'], ['2', '20:00', '1', '09:00']])
+    # 1
+    # >>> fun([['3', '03:52', '1', '08:50'], ['1', '18:28', '3', '21:53'], ['2', '03:58', '3', '09:00'], ['3', '14:59', '2', '21:13']])
+    # 2
+    # """
 
     events = []
-    balance = {} # сколько уехало, столько приехало, баланс = 0
 
     num_00 = 0 # количество автобусов, которые в полночь в пути
 
-    for town1, time_out, town2, time_in in s:
-
-        if town1 not in balance:
-            balance[town1] = 0
-
-        if town2 not in balance:
-            balance[town2] = 0
-
-        balance[town1] -= 1
-        balance[town2] += 1
+    for _ in range(M):
+        town1, time_out, town2, time_in = input().split() # № HH:MM № HH:MM
 
         events.append((time_out, OUT, town1))
         events.append((time_in, IN, town2))
@@ -100,14 +91,11 @@ def fun(s):
         if time_in < time_out:
             num_00 += 1
 
-    for val in balance.values():
-        if val != 0:
-            return -1
-        
     events.sort()
     # print(events)
 
     town2cntbuses = {}
+    balance = {} # сколько уехало, столько приехало, баланс = 0
 
     num_buses = 0
 
@@ -115,33 +103,32 @@ def fun(s):
 
         if town not in town2cntbuses:
             town2cntbuses[town] = 0
+            balance[town] = 0
 
         if type == IN:
             town2cntbuses[town] += 1
             balance[town] += 1
 
         elif type == OUT:
+            balance[town] -= 1
+
             if town2cntbuses[town] == 0:
-                num_buses += 1 # можно посчитать сумму значений town2cntbuses + num_00
+                num_buses += 1
             else:
                 town2cntbuses[town] -= 1
 
         # print(town2cntbuses)
         # print(num_buses)
+
+    for val in balance.values():
+        if val != 0:
+            return -1
+
     return num_buses + num_00
 
 
 N, M = map(int, input().split()) # кол-во городов и рейсов
-s = [input().split() for _ in range(M)] # № HH:MM № HH:MM
-print(fun(s))
-
-
-# print(f">>> fun({s})")
-# print(f"    {fun(s)}")
-
-# print(fun([['2', '20:00', '1', '10:00'], ['1', '08:00', '2', '21:00']]))
-# print(fun([['1', '09:00', '2', '20:00'], ['2', '20:00', '1', '09:00']]))
-# print(fun([['3', '03:52', '1', '08:50'], ['1', '18:28', '3', '21:53'], ['2', '03:58', '3', '09:00'], ['3', '14:59', '2', '21:13']]))
+print(fun(M))
 
 
 if __name__ == "__main__":
