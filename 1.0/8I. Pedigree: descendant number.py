@@ -42,43 +42,81 @@ import sys
 sys.setrecursionlimit(100000)
 """
 
+import sys
+
+sys.setrecursionlimit(100000)
+
+
+def maketree(s):
+    nodes = {}
+
+    for child, parent in s:
+
+        if child not in nodes:
+            nodes[child] = {"Name" : child, "Parent" : None, "Children" : []}
+
+        if parent not in nodes:
+            nodes[parent] = {"Name" : parent, "Parent" : None, "Children" : []}
+
+        # nodes[child]["Parent"] = parent
+        # nodes[parent]["Children"].append(child)
+        nodes[child]["Parent"] = nodes[parent]
+        nodes[parent]["Children"].append(nodes[child])
+
+
+    for val in nodes.values():
+        if val["Parent"] is None:
+            return val
+
+    raise TypeError("Cycle in tree!!!")
+
+
+def print_tree(root, level=0):
+    print("\t" * level + root["Name"])
+
+    for child in root["Children"]:
+        print_tree(child, level+1)
+
+
+def num_descendant(root, ans = {}):
+    # ans = {Name : num descendants}
+    num = 0
+    for child in root["Children"]:
+        num += num_descendant(child, ans)[child["Name"]] + 1
+
+    ans[root["Name"]] = num
+    return ans
+
 
 def fun(s):
     """
-    # >>> fun([0, 1, 10, 9])
-    # ([0, 1], [9, 10], [3])
-    # >>> fun([1, 2])
-    # ([2], [1], [3])
-    # >>> fun([])
-    # ([], [], [])
+    >>> fun([['Alexei', 'Peter_I'], ['Anna', 'Peter_I'], ['Elizabeth', 'Peter_I'], ['Peter_II', 'Alexei'], ['Peter_III', 'Anna'], ['Paul_I', 'Peter_III'], ['Alexander_I', 'Paul_I'], ['Nicholaus_I', 'Paul_I']])
+    [('Alexander_I', 0), ('Alexei', 1), ('Anna', 4), ('Elizabeth', 0), ('Nicholaus_I', 0), ('Paul_I', 2), ('Peter_I', 8), ('Peter_II', 0), ('Peter_III', 3)]
     """
 
-    return
+    root = maketree(s)
+    # print_tree(root)
+    ans = num_descendant(root, {}) # !!! замыкание функции
+    ans = sorted(ans.items())
+
+    return ans
 
 
-N, M = map(int, input().split())
-s = [int(input()) for _ in range(N)]
-print(*fun(s))
+N = int(input())
+s = [input().split() for _ in range(N-1)]
+for name, num in fun(s):
+    print(name, num)
 
+# fun([['Alexei', 'Peter_I'], ['Anna', 'Peter_I'], ['Elizabeth', 'Peter_I'], ['Peter_II', 'Alexei'], ['Peter_III', 'Anna'], ['Paul_I', 'Peter_III'], ['Alexander_I', 'Paul_I'], ['Nicholaus_I', 'Paul_I']])
+# fun([['AQHFYP', 'MKFXCLZBT'], ['AYKOTYQ', 'QIUKGHWCDC'], ['IWCGKHMFM', 'WPLHJL'], ['MJVAURUDN', 'QIUKGHWCDC'], ['MKFXCLZBT', 'IWCGKHMFM'], ['PUTRIPYHNQ', 'UQNGAXNP'], ['QIUKGHWCDC', 'WPLHJL'], ['UQNGAXNP', 'WPLHJL'], ['YURTPJNR', 'QIUKGHWCDC']])
+    
 
-# def str2fstr(s):
-#     ans = []
-#     for i in s:
-#         if i.isalpha():
-#             ans.append(f"{{{i}}}")
-#         else:
-#             ans.append(i)
-#     return "".join(ans)
-
-
-# q = "K, s"
-# print(f"fun({q})\n>>> fun({str2fstr(q)})")
-# print(f">>> fun({str2fstr(q)})".format(*eval(q)))
-
+# print(fun([['Alexei', 'Peter_I'], ['Anna', 'Peter_I'], 
+#            ['Elizabeth', 'Peter_I'], ['Peter_II', 'Alexei'], 
+#            ['Peter_III', 'Anna'], ['Paul_I', 'Peter_III'], 
+#            ['Alexander_I', 'Paul_I'], ['Nicholaus_I', 'Paul_I']]))
 
 # print(f">>> fun({s})")
-# print(f"    {fun(s)}")
-
 
 if __name__ == "__main__":
     import doctest

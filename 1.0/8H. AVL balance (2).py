@@ -47,30 +47,21 @@ def maketree(s):
     return tree
 
 
-def height(tree):
-    if tree is None:
-        return 0
-    
-    h = max(height(tree["Left"]), height(tree["Right"])) + 1
-    tree["height"] = h
-    return h
-
-
-
 def avl(tree):
-    height(tree) # заполним height
-    # print(tree)
 
     if tree is None:
-        return True
+        return True, 0
 
-    left_height = tree["Left"]["height"] if tree["Left"] is not None else 0
-    right_height = tree["Right"]["height"] if tree["Right"] is not None else 0
+    left_avl, left_height = avl(tree["Left"])
+    right_avl, right_height = avl(tree["Right"])
 
-    if abs(right_height - left_height) <= 1:
-        return avl(tree["Left"]) and avl(tree["Right"])
+    cur_height = max(left_height, right_height) + 1
+    # print(tree["Key"], cur_height)
+
+    if left_avl and right_avl and abs(right_height - left_height) <= 1:
+        return True, cur_height
     else:
-        return False
+        return False, cur_height
 
 
 
@@ -80,11 +71,13 @@ def fun(s):
     'YES'
     >>> fun([1])
     'YES'
+    >>> fun([1, 2, 3])
+    'NO'
     """
 
     tree = maketree(s)
 
-    return "YES" if avl(tree) else "NO"
+    return "YES" if avl(tree)[0] else "NO"
 
 
 s = list(map(int, input().split()))[:-1]
