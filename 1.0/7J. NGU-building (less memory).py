@@ -58,7 +58,7 @@ NO
 """
 
 IN = 1
-OUT = -1 
+OUT = -1
 # чтобы нулевое пересечение не посчитать
 
 
@@ -72,10 +72,10 @@ def fun(N, W, L):
     for i in range(N):
         x1, y1, z1, x2, y2, z2 = map(int, input().split())
         # (time, type, square, idx)
-        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i+1))
-        events.append((z1, IN, (y2 - y1) * (x2 - x1), i+1))
+        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i + 1))
+        events.append((z1, IN, (y2 - y1) * (x2 - x1), i + 1))
 
-    cur_square = 0 # есть покрытие => площадь при фиксированном z == полной
+    cur_square = 0  # есть покрытие => площадь при фиксированном z == полной
     cur_blocks = set()
     best_blocks = set()
 
@@ -90,13 +90,14 @@ def fun(N, W, L):
             cur_square -= square
             cur_blocks.remove(idx)
 
-        if cur_square == TOTAL_SQUARE and (len(best_blocks) == 0 or len(cur_blocks) < len(best_blocks)):
+        if cur_square == TOTAL_SQUARE and (
+            len(best_blocks) == 0 or len(cur_blocks) < len(best_blocks)
+        ):
             best_blocks = cur_blocks.copy()
 
-        
     if len(best_blocks) == 0:
         return ["NO"]
-    
+
     ans = ["YES", len(best_blocks)]
 
     for elem in list(best_blocks):
@@ -115,13 +116,13 @@ def fun(N, W, L):
     for i in range(N):
         x1, y1, z1, x2, y2, z2 = map(int, input().split())
         # (time, type, square, idx)
-        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i+1))
-        events.append((z1, IN, (y2 - y1) * (x2 - x1), i+1))
+        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i + 1))
+        events.append((z1, IN, (y2 - y1) * (x2 - x1), i + 1))
 
     events.sort()
 
-    cur_square = 0 # есть покрытие => площадь при фиксированном z == полной
-    cur_num_blocks = 0 # можно хранить количество, а не множество (выигрыш по памяти)
+    cur_square = 0  # есть покрытие => площадь при фиксированном z == полной
+    cur_num_blocks = 0  # можно хранить количество, а не множество (выигрыш по памяти)
     best_num_blocks = N + 1
 
     for _, type, square, idx in events:
@@ -139,7 +140,6 @@ def fun(N, W, L):
 
     if best_num_blocks == N + 1:
         return ["NO"]
-    
 
     cur_square = 0
     best_blocks = set()
@@ -155,7 +155,6 @@ def fun(N, W, L):
 
         if cur_square == TOTAL_SQUARE and len(best_blocks) == best_num_blocks:
             break
-
 
     ans = ["YES", len(best_blocks)]
 

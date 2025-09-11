@@ -58,14 +58,14 @@ NO
 """
 
 IN = 1
-OUT = -1 
+OUT = -1
 # чтобы нулевое пересечение не посчитать
 
 
 def fun(s, W, L):
     """
     ML - 29 test
-    
+
     >>> fun([[0, 0, 0, 10, 10, 10]], 10, 10)
     ['YES', 1, 1]
     >>> fun([[0, 0, 0, 10, 5, 5], [0, 5, 5, 10, 10, 10]], 10, 10)
@@ -77,10 +77,10 @@ def fun(s, W, L):
 
     for i, (x1, y1, z1, x2, y2, z2) in enumerate(s):
         # (time, type, square, idx)
-        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i+1))
-        events.append((z1, IN, (y2 - y1) * (x2 - x1), i+1))
+        events.append((z2, OUT, (y2 - y1) * (x2 - x1), i + 1))
+        events.append((z1, IN, (y2 - y1) * (x2 - x1), i + 1))
 
-    cur_square = 0 # есть покрытие => площадь при фиксированном z == полной
+    cur_square = 0  # есть покрытие => площадь при фиксированном z == полной
     cur_blocks = set()
     best_blocks = set()
 
@@ -97,14 +97,15 @@ def fun(s, W, L):
             cur_square -= square
             cur_blocks.remove(idx)
 
-        if cur_square == TOTAL_SQUARE and (len(best_blocks) == 0 or len(cur_blocks) < len(best_blocks)):
+        if cur_square == TOTAL_SQUARE and (
+            len(best_blocks) == 0 or len(cur_blocks) < len(best_blocks)
+        ):
             best_blocks = cur_blocks.copy()
             # print(2, best_blocks)
 
-        
     if len(best_blocks) == 0:
         return ["NO"]
-    
+
     ans = ["YES", len(best_blocks)]
 
     for elem in list(best_blocks):

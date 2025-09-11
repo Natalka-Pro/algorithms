@@ -64,9 +64,9 @@ Fi, время отправления Xi, номер города назначе
 2
 """
 
-
 IN = -1
 OUT = 1
+
 
 def fun(M):
     # """
@@ -80,10 +80,10 @@ def fun(M):
 
     events = []
 
-    num_00 = 0 # количество автобусов, которые в полночь в пути
+    num_00 = 0  # количество автобусов, которые в полночь в пути
 
     for _ in range(M):
-        town1, time_out, town2, time_in = input().split() # № HH:MM № HH:MM
+        town1, time_out, town2, time_in = input().split()  # № HH:MM № HH:MM
 
         events.append((time_out, OUT, town1))
         events.append((time_in, IN, town2))
@@ -95,7 +95,7 @@ def fun(M):
     # print(events)
 
     town2cntbuses = {}
-    balance = {} # сколько уехало, столько приехало, баланс = 0
+    balance = {}  # сколько уехало, столько приехало, баланс = 0
 
     num_buses = 0
 
@@ -127,7 +127,7 @@ def fun(M):
     return num_buses + num_00
 
 
-N, M = map(int, input().split()) # кол-во городов и рейсов
+N, M = map(int, input().split())  # кол-во городов и рейсов
 print(fun(M))
 
 

@@ -50,15 +50,14 @@ def maketree(s):
 def height(tree):
     if tree is None:
         return 0
-    
+
     h = max(height(tree["Left"]), height(tree["Right"])) + 1
     tree["height"] = h
     return h
 
 
-
 def avl(tree):
-    height(tree) # заполним height
+    height(tree)  # заполним height
     # print(tree)
 
     if tree is None:
@@ -71,7 +70,6 @@ def avl(tree):
         return avl(tree["Left"]) and avl(tree["Right"])
     else:
         return False
-
 
 
 def fun(s):

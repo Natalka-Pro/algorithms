@@ -64,9 +64,9 @@ Fi, время отправления Xi, номер города назначе
 2
 """
 
-
 IN = -1
 OUT = 1
+
 
 def fun(s):
     """
@@ -79,9 +79,9 @@ def fun(s):
     """
 
     events = []
-    balance = {} # сколько уехало, столько приехало, баланс = 0
+    balance = {}  # сколько уехало, столько приехало, баланс = 0
 
-    num_00 = 0 # количество автобусов, которые в полночь в пути
+    num_00 = 0  # количество автобусов, которые в полночь в пути
 
     for town1, time_out, town2, time_in in s:
 
@@ -103,7 +103,7 @@ def fun(s):
     for val in balance.values():
         if val != 0:
             return -1
-        
+
     events.sort()
     # print(events)
 
@@ -122,7 +122,7 @@ def fun(s):
 
         elif type == OUT:
             if town2cntbuses[town] == 0:
-                num_buses += 1 # можно посчитать сумму значений town2cntbuses + num_00
+                num_buses += 1  # можно посчитать сумму значений town2cntbuses + num_00
             else:
                 town2cntbuses[town] -= 1
 
@@ -131,8 +131,8 @@ def fun(s):
     return num_buses + num_00
 
 
-N, M = map(int, input().split()) # кол-во городов и рейсов
-s = [input().split() for _ in range(M)] # № HH:MM № HH:MM
+N, M = map(int, input().split())  # кол-во городов и рейсов
+s = [input().split() for _ in range(M)]  # № HH:MM № HH:MM
 print(fun(s))
 
 

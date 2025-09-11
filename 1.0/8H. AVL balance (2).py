@@ -64,7 +64,6 @@ def avl(tree):
         return False, cur_height
 
 
-
 def fun(s):
     """
     >>> fun([7, 3, 2, 1, 9, 5, 4, 6, 8])

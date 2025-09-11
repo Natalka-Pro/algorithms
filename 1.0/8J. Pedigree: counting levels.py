@@ -93,7 +93,6 @@ O(n2) (не считая сложности обращения к элемент
 Пример ниже соответствует приведенному древу рода Романовых.
 """
 
-
 import sys
 
 sys.setrecursionlimit(100000)
@@ -105,16 +104,15 @@ def maketree(s):
     for child, parent in s:
 
         if child not in nodes:
-            nodes[child] = {"Name" : child, "Parent" : None, "Children" : []}
+            nodes[child] = {"Name": child, "Parent": None, "Children": []}
 
         if parent not in nodes:
-            nodes[parent] = {"Name" : parent, "Parent" : None, "Children" : []}
+            nodes[parent] = {"Name": parent, "Parent": None, "Children": []}
 
         # nodes[child]["Parent"] = parent
         # nodes[parent]["Children"].append(child)
         nodes[child]["Parent"] = nodes[parent]
         nodes[parent]["Children"].append(nodes[child])
-
 
     for val in nodes.values():
         if val["Parent"] is None:
@@ -127,18 +125,18 @@ def print_tree(root, level=0):
     print("\t" * level + root["Name"])
 
     for child in root["Children"]:
-        print_tree(child, level+1)
+        print_tree(child, level + 1)
 
 
-def depth(root, ans = {}):
+def depth(root, ans={}):
     # ans = {Name : depth}
 
     if root["Parent"] is None:
         ans[root["Name"]] = 0
-    
+
     for child in root["Children"]:
         ans[child["Name"]] = ans[child["Parent"]["Name"]] + 1
-        depth(child, ans) 
+        depth(child, ans)
 
     return ans
 
@@ -155,14 +153,14 @@ def fun(s):
 
     root = maketree(s)
     # print_tree(root)
-    ans = depth(root, {}) # !!! замыкание функции
+    ans = depth(root, {})  # !!! замыкание функции
     ans = sorted(ans.items())
 
     return ans
 
 
 N = int(input())
-s = [input().split() for _ in range(N-1)]
+s = [input().split() for _ in range(N - 1)]
 for name, num in fun(s):
     print(name, num)
 
@@ -176,7 +174,7 @@ for name, num in fun(s):
 
 # f(5) # {6: 16}
 # f(6) # {6: 16, 7: 17}
-    
+
 
 if __name__ == "__main__":
     import doctest
